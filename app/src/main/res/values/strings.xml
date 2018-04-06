@@ -3,4 +3,6 @@
 
     <string name="launch_activity_email_hint">Email</string>
     <string name="launch_activity_password_hint">Password</string>
+    <string name="launch_activity_login">Login</string>
+    <string name="launch_activity_login_with_gmail">Login with Gmail</string>
 </resources>
