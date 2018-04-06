@@ -1,0 +1,45 @@
+apply from: "dependencies.gradle"
+
+apply from: "config.gradle"
+
+buildscript {
+    ext{
+        kotlin_version = '1.2.30'
+        android_gradle_version = '3.1.0'
+    }
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://maven.google.com' }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:${android_gradle_version}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
+    }
+}
+
+def fetchAllDependencies(project, delegate, type, defaultImplementation){
+    def extension = rootProject.extensions.getByName('ext')
+    def dependencies = extension."${project.name}${type}Dependencies"
+    for(item in dependencies){
+        if(item instanceof Map<?,String>){
+            if(item.containsKey('type') && item.containsKey('dependency')){
+                delegate.{item.get('type')} item.get('dependency')
+            }
+        }else{
+            delegate."${defaultImplementation}" item
+        }
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://maven.google.com' }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

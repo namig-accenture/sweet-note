@@ -1,0 +1,74 @@
+repositories {
+    google()
+    jcenter()
+    mavenCentral()
+    maven {
+        url 'https://maven.google.com'
+    }
+}
+
+ext {
+    def kotlinVersion = '1.2.30'
+    def constraintLayoutVersion = '1.0.2'
+    def appcompatVersion = '27.1.0'
+    def androidArchVersion = '1.1.1'
+    def jUnitVersion = '4.12'
+    def androidTestRunnerVersion = '1.0.1'
+    def espressoCoreVersion = '3.0.1'
+    def rxJavaVersion = '2.1.12'
+    def rxKotlinVersion = '2.2.0'
+    def daggerVersion = '2.15'
+
+    def allDependencies = [
+            kotlinStdLib          : "org.jetbrains.kotlin:kotlin-stdlib-jre7:${kotlinVersion}",
+            constraintLayout      : "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
+            cardView              : "com.android.support:cardview-v7:${appcompatVersion}",
+            appcompat             : "com.android.support:appcompat-v7:${appcompatVersion}",
+            design                : "com.android.support:design:${appcompatVersion}",
+            androidArchCompiler   : [dependency: "android.arch.lifecycle:compiler:${androidArchVersion}", type: "kapt"],
+            androidArchExtensions : "android.arch.lifecycle:extensions:${androidArchVersion}",
+            junit                 : "junit:junit:${jUnitVersion}",
+            androidTestRunner     : "com.android.support.test:runner:${androidTestRunnerVersion}",
+            espresso              : "com.android.support.test.espresso:espresso-core:${espressoCoreVersion}",
+            rxJava                : "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
+            rxKotlin              : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
+            dagger                : "com.google.dagger:dagger:${daggerVersion}",
+            daggerCompiler        : [dependency: "com.google.dagger:dagger-compiler:${daggerVersion}", type: "kapt"],
+            daggerAndroid         : "com.google.dagger:dagger-android:${daggerVersion}",
+            daggerAndroidSupport  : "com.google.dagger:dagger-android-support:${daggerVersion}",
+            daggerAndroidProcessor: [dependency: "com.google.dagger:dagger-android-processor:${daggerVersion}", type: "kapt"],
+    ]
+
+    appDependencies = [
+            allDependencies.kotlinStdLib,
+            allDependencies.constraintLayout,
+            allDependencies.cardView,
+            allDependencies.appcompat,
+            allDependencies.design,
+            allDependencies.androidArchCompiler,
+            allDependencies.androidArchExtensions,
+            allDependencies.dagger,
+            allDependencies.daggerCompiler,
+            allDependencies.daggerAndroid,
+            allDependencies.daggerAndroidSupport,
+            allDependencies.daggerAndroidProcessor,
+    ]
+    appTestDependencies = [
+            allDependencies.junit
+    ]
+    appAndroidTestDependencies = [
+            allDependencies.androidTestRunner,
+            allDependencies.espresso
+    ]
+
+    dataDependencies = []
+    dataTestDependencies = []
+
+    domainDependencies = [
+            allDependencies.kotlinStdLib,
+            allDependencies.rxJava,
+            allDependencies.rxKotlin,
+            allDependencies.dagger
+    ]
+    domainTestDependencies = []
+}
