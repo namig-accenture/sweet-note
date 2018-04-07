@@ -17,6 +17,7 @@ ext {
     def espressoCoreVersion = '3.0.1'
     def rxJavaVersion = '2.1.12'
     def rxKotlinVersion = '2.2.0'
+    def rxBindingVersion = '2.1.1'
     def daggerVersion = '2.15'
 
     def allDependencies = [
@@ -32,6 +33,7 @@ ext {
             espresso              : "com.android.support.test.espresso:espresso-core:${espressoCoreVersion}",
             rxJava                : "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
             rxKotlin              : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
+            rxBinding             : "com.jakewharton.rxbinding2:rxbinding:${rxBindingVersion}",
             dagger                : "com.google.dagger:dagger:${daggerVersion}",
             daggerCompiler        : [dependency: "com.google.dagger:dagger-compiler:${daggerVersion}", type: "kapt"],
             daggerAndroid         : "com.google.dagger:dagger-android:${daggerVersion}",
@@ -52,6 +54,9 @@ ext {
             allDependencies.daggerAndroid,
             allDependencies.daggerAndroidSupport,
             allDependencies.daggerAndroidProcessor,
+            allDependencies.rxJava,
+            allDependencies.rxKotlin,
+            allDependencies.rxBinding
     ]
     appTestDependencies = [
             allDependencies.junit

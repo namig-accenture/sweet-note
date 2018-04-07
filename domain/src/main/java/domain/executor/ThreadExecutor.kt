@@ -1,4 +1,4 @@
-package domain
+package domain.executor
 
 import java.util.concurrent.Executor
 

@@ -1,5 +1,7 @@
-package domain
+package domain.transformers
 
+import domain.executor.PostExecutionThread
+import domain.executor.ThreadExecutor
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

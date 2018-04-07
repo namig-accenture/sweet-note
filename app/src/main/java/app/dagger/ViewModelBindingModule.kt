@@ -1,7 +1,7 @@
 package app.dagger
 
 import android.arch.lifecycle.ViewModel
-import app.views.mvvm.LaunchActivityModel
+import app.views.mvp.LaunchActivityViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -11,6 +11,6 @@ internal abstract class ViewModelBindingModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(LaunchActivityModel::class)
-    abstract fun provideLaunchActivityModel(launchActivityModel: LaunchActivityModel): ViewModel
+    @ViewModelKey(LaunchActivityViewModel::class)
+    abstract fun provideLaunchActivityModel(launchActivityModel: LaunchActivityViewModel): ViewModel
 }

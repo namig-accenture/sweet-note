@@ -24,12 +24,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding{
+    dataBinding {
         enabled true
     }
 }
 
 dependencies {
+    implementation project(":domain")
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     rootProject.fetchAllDependencies(this, delegate, '', 'implementation')
     rootProject.fetchAllDependencies(this, delegate, 'Test', 'testImplementation')

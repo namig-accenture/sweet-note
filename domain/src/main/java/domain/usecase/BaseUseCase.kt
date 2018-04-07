@@ -1,11 +1,12 @@
-package domain
+package domain.usecase
 
+import domain.transformers.SchedulerTransformer
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
 
-internal abstract class BaseUseCase {
+abstract class BaseUseCase {
     @Inject
     lateinit var schedulerTransformer: SchedulerTransformer
 
