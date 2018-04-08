@@ -18,4 +18,22 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="SwitchButtonLeft" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:minWidth">100dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:button">@null</item>
+        <item name="android:background">@drawable/switch_button_left</item>
+        <item name="android:padding">@dimen/spacing_small</item>
+        <item name="android:textColor">@drawable/switch_text_color</item>
+    </style>
+
+    <style name="SwitchButtonRight" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:minWidth">100dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:button">@null</item>
+        <item name="android:background">@drawable/switch_button_right</item>
+        <item name="android:padding">@dimen/spacing_small</item>
+        <item name="android:textColor">@drawable/switch_text_color</item>
+    </style>
+
 </resources>

@@ -1,12 +1,11 @@
-package app.views.dagger
+package app.views.launchactivity
 
-import app.views.LaunchActivity
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
 
 @LaunchActivityScope
 @Subcomponent(modules = [LaunchActivityModule::class])
-internal interface LaunchActivityComponent : AndroidInjector<LaunchActivity> {
+internal interface LaunchActivitySubcomponent : AndroidInjector<LaunchActivity> {
     @Subcomponent.Builder
     abstract class Builder : AndroidInjector.Builder<LaunchActivity>()
 }

@@ -1,10 +1,10 @@
 package app.ext
 
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.os.Bundle
+import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -21,8 +21,11 @@ internal abstract class BaseActivity<out VM : BaseViewModel, out DB : ViewDataBi
     @Inject
     lateinit var supportFragmentInjector: DispatchingAndroidInjector<Fragment>
 
-    inline fun <reified VM : BaseViewModel, F : ViewModelProvider.Factory> getViewModel(factory: F): VM {
-        return ViewModelProviders.of(this, factory)[VM::class.java]
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    inline fun <reified VM : BaseViewModel> provideViewModel(): VM {
+        return ViewModelProviders.of(this, viewModelFactory)[VM::class.java]
     }
 
     inline fun <reified DB : ViewDataBinding> getDataBinding(@LayoutRes res: Int): DB {
@@ -35,5 +38,15 @@ internal abstract class BaseActivity<out VM : BaseViewModel, out DB : ViewDataBi
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(dataBinding.root)
+    }
+
+    inline fun <reified F : Fragment> addFragment(@IdRes container: Int, block: () -> F) {
+        val tag = F::class.java.simpleName
+        supportFragmentManager.findFragmentByTag(tag)?.let {
+            return
+        }
+        supportFragmentManager.beginTransaction()
+                .replace(container, block(), tag)
+                .commit()
     }
 }

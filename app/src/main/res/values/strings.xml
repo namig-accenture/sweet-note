@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">SweetNote</string>
 
+    <string name="login">Login</string>
+    <string name="register">Register</string>
     <string name="launch_activity_email_hint">Email</string>
     <string name="launch_activity_password_hint">Password</string>
     <string name="launch_activity_login">Login</string>

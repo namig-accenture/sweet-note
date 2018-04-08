@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <data>
-
-        <variable
-            name="viewModel"
-            type="app.views.mvp.LaunchActivityViewModel" />
-    </data>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -27,50 +19,34 @@
                 android:orientation="vertical"
                 android:padding="@dimen/spacing_medium">
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/email_layout"
-                    android:layout_width="match_parent"
+                <RadioGroup
+                    android:id="@+id/view_switcher"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/launch_activity_email_hint"
-                    app:errorEnabled="true"
-                    app:hintEnabled="true">
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:checkedButton="@id/group_login"
+                    android:orientation="horizontal">
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/et_email"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:inputType="textEmailAddress" />
-                </android.support.design.widget.TextInputLayout>
+                    <RadioButton
+                        android:id="@+id/group_login"
+                        style="@style/SwitchButtonLeft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/login" />
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/password_layout"
+                    <RadioButton
+                        android:id="@+id/group_register"
+                        style="@style/SwitchButtonRight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/register" />
+                </RadioGroup>
+
+                <FrameLayout
+                    android:id="@+id/container_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/launch_activity_password_hint"
-                    app:errorEnabled="true"
-                    app:hintEnabled="true"
-                    app:passwordToggleEnabled="true">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/et_password"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:inputType="textPassword" />
-                </android.support.design.widget.TextInputLayout>
-
-                <Button
-                    android:id="@+id/btn_login"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:enabled="@{viewModel.isLoginEnabled}"
-                    android:text="@string/launch_activity_login" />
-
-                <Button
-                    android:id="@+id/btn_login_with_gmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_medium"
-                    android:text="@string/launch_activity_login_with_gmail" />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 

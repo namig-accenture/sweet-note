@@ -1,4 +1,4 @@
-package app.views.dagger
+package app.views.launchactivity
 
 import javax.inject.Scope
 
