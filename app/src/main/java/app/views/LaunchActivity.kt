@@ -5,6 +5,7 @@ import app.ext.BaseActivity
 import app.ext.ViewModelFactory
 import app.views.dagger.LaunchActivityScope
 import app.views.mvp.LaunchActivityViewModel
+import com.android.databinding.library.baseAdapters.BR
 import com.example.namigtahmazli.sweetnote.R
 import com.example.namigtahmazli.sweetnote.databinding.ActivityLauncherBinding
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -32,6 +33,7 @@ internal class LaunchActivity : BaseActivity<LaunchActivityViewModel, ActivityLa
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        dataBinding.setVariable(BR.viewModel, viewModel)
         disposables = CompositeDisposable()
     }
 
@@ -46,8 +48,10 @@ internal class LaunchActivity : BaseActivity<LaunchActivityViewModel, ActivityLa
         return RxTextView.textChanges(dataBinding.etEmail)
                 .filter { !it.isEmpty() }
                 .map { it.toString() }
+                .doOnNext { viewModel.email = it }
                 .window(1)
                 .flatMap(viewModel::isValidEmail)
+                .doOnNext { viewModel.isValidEmail = it }
                 .subscribeBy(
                         onNext = { dataBinding.emailLayout.error = if (it) null else "Invalid" }
                 )
@@ -57,8 +61,10 @@ internal class LaunchActivity : BaseActivity<LaunchActivityViewModel, ActivityLa
         return RxTextView.textChanges(dataBinding.etPassword)
                 .filter { !it.isEmpty() }
                 .map { it.toString() }
+                .doOnNext { viewModel.password = it }
                 .window(1)
                 .flatMap(viewModel::isValidPassword)
+                .doOnNext { viewModel.isValidPassword = it }
                 .subscribeBy(
                         onNext = { dataBinding.passwordLayout.error = if (it) null else "Invalid" }
                 )
