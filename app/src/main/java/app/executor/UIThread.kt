@@ -1,6 +1,6 @@
 package app.executor
 
-import app.dagger.AppScope
+import data.dagger.scopes.AppScope
 import domain.executor.PostExecutionThread
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers

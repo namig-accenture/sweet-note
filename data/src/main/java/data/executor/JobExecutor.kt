@@ -1,6 +1,6 @@
-package app.executor
+package data.executor
 
-import app.dagger.AppScope
+import data.dagger.scopes.AppScope
 import domain.executor.ThreadExecutor
 import java.util.concurrent.*
 import javax.inject.Inject
@@ -14,7 +14,7 @@ class JobExecutor @Inject constructor() : ThreadExecutor {
     }
 
     object JobThreadFactory : ThreadFactory {
-        var count = 0
+        private var count = 0
         override fun newThread(r: Runnable?): Thread {
             return Thread(r, "android_${count++}")
         }

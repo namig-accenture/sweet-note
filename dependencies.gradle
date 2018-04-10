@@ -19,6 +19,7 @@ ext {
     def rxKotlinVersion = '2.2.0'
     def rxBindingVersion = '2.1.1'
     def daggerVersion = '2.15'
+    def roomVersion = '1.0.0'
 
     def allDependencies = [
             kotlinStdLib          : "org.jetbrains.kotlin:kotlin-stdlib-jre7:${kotlinVersion}",
@@ -39,6 +40,10 @@ ext {
             daggerAndroid         : "com.google.dagger:dagger-android:${daggerVersion}",
             daggerAndroidSupport  : "com.google.dagger:dagger-android-support:${daggerVersion}",
             daggerAndroidProcessor: [dependency: "com.google.dagger:dagger-android-processor:${daggerVersion}", type: "kapt"],
+            room                  : ["android.arch.persistence.room:runtime:${roomVersion}"],
+            roomCompiler          : [dependency: "android.arch.persistence.room:compiler:${roomVersion}", type: 'kapt'],
+            roomRxSupport         : ["android.arch.persistence.room:rxjava2:${roomVersion}"],
+            roomTestHelper        : "android.arch.persistence.room:testing:${roomVersion}",
     ]
 
     appDependencies = [
@@ -56,7 +61,7 @@ ext {
             allDependencies.daggerAndroidProcessor,
             allDependencies.rxJava,
             allDependencies.rxKotlin,
-            allDependencies.rxBinding
+            allDependencies.rxBinding,
     ]
     appTestDependencies = [
             allDependencies.junit
@@ -66,8 +71,23 @@ ext {
             allDependencies.espresso
     ]
 
-    dataDependencies = []
-    dataTestDependencies = []
+    dataDependencies = [
+            allDependencies.kotlinStdLib,
+            allDependencies.rxJava,
+            allDependencies.rxKotlin,
+            allDependencies.dagger,
+            allDependencies.daggerCompiler,
+            allDependencies.room,
+            allDependencies.roomCompiler,
+            allDependencies.roomRxSupport,
+    ]
+    dataTestDependencies = [
+            allDependencies.roomTestHelper,
+            allDependencies.junit,
+    ]
+    dataAndroidTestDependencies = [
+            allDependencies.androidTestRunner,
+    ]
 
     domainDependencies = [
             allDependencies.kotlinStdLib,

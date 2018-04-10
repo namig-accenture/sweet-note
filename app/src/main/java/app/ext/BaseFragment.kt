@@ -23,6 +23,7 @@ internal abstract class BaseFragment<out VM : BaseViewModel, DB : ViewDataBindin
     lateinit var dataBinding: DB
     @get:LayoutRes
     abstract val layoutRes: Int
+    abstract val viewModelId: Int
 
     @Inject
     lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
@@ -53,6 +54,7 @@ internal abstract class BaseFragment<out VM : BaseViewModel, DB : ViewDataBindin
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dataBinding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
+        dataBinding.setVariable(viewModelId, viewModel)
         return dataBinding.root
     }
 }

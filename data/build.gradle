@@ -1,9 +1,6 @@
-apply plugin: 'com.android.application'
-
-apply plugin: 'kotlin-android'
-
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
-
+apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 def config = rootProject.extensions.getByName('ext')
@@ -11,37 +8,28 @@ def config = rootProject.extensions.getByName('ext')
 android {
     compileSdkVersion config.compileSdkVersion
     defaultConfig {
-        applicationId config.applicationId
         minSdkVersion config.minSdkVersion
         targetSdkVersion config.targetSdkVersion
         versionCode config.versionCode
         versionName config.versionName
         testInstrumentationRunner config.testInstrumentationRunner
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-            buildConfigField("String", "DB_NAME", "\"SweetNote.db\"")
         }
-        debug{
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-            buildConfigField("String", "DB_NAME", "\"SweetNote.db\"")
-        }
-    }
-    dataBinding {
-        enabled true
     }
 }
 
 dependencies {
     implementation project(":domain")
-    implementation project(":data")
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     rootProject.fetchAllDependencies(this, delegate, '', 'implementation')
-    rootProject.fetchAllDependencies(this, delegate, 'Test', 'testImplementation')
-    rootProject.fetchAllDependencies(this, delegate, 'AndroidTest', 'androidTestImplementation')
+    rootProject.fetchAllDependencies(this, delegate, 'Test', 'implementation')
+    rootProject.fetchAllDependencies(this, delegate, 'AndroidTest', 'implementation')
+}
+repositories {
+    mavenCentral()
 }

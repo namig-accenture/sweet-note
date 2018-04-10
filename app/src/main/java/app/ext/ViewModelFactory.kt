@@ -2,7 +2,7 @@ package app.ext
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import app.dagger.AppScope
+import data.dagger.scopes.AppScope
 import javax.inject.Inject
 import javax.inject.Provider
 

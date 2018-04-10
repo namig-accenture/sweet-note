@@ -1,7 +1,7 @@
-package app.dagger
+package data.dagger.scopes
 
 import javax.inject.Singleton
 
 @Singleton
 @Retention(AnnotationRetention.RUNTIME)
-internal annotation class AppScope
+annotation class AppScope
