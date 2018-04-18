@@ -4,10 +4,9 @@ import domain.executor.PostExecutionThread
 import domain.executor.ThreadExecutor
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
 
-class AndroidSchedulerTransformer @Inject constructor(threadExecutor: ThreadExecutor,
-                                                      postExecutionThread: PostExecutionThread) : SchedulerTransformer {
+class AndroidSchedulerTransformer(threadExecutor: ThreadExecutor,
+                                  postExecutionThread: PostExecutionThread) : SchedulerTransformer {
     private val subscribeScheduler: Scheduler = Schedulers.from(threadExecutor)
     private val observeScheduler: Scheduler = postExecutionThread.scheduler
 

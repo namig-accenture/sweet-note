@@ -1,12 +1,9 @@
 package data.executor
 
-import data.dagger.scopes.AppScope
 import domain.executor.ThreadExecutor
 import java.util.concurrent.*
-import javax.inject.Inject
 
-@AppScope
-class JobExecutor @Inject constructor() : ThreadExecutor {
+class JobExecutor : ThreadExecutor {
     private val queue: BlockingDeque<Runnable> = LinkedBlockingDeque()
     private val threadPoolExecutor: ThreadPoolExecutor = ThreadPoolExecutor(INITIAL_COUNT, MAX_COUNT, ALIVE_TIME, ALIVE_TIME_UNIT, queue, JobThreadFactory)
     override fun execute(command: Runnable?) {

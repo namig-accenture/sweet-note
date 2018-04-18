@@ -13,12 +13,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.koin.android.architecture.ext.viewModel
 
-@LaunchActivityScope
-internal class LaunchActivity : BaseActivity<LaunchActivityViewModel, ActivityLauncherBinding>() {
-
-    override val viewModel: LaunchActivityViewModel
-        get() = provideViewModel()
+internal class LaunchActivity : BaseActivity<ActivityLauncherBinding>() {
+    val viewModel by viewModel<LaunchActivityViewModel>()
 
     override val dataBinding: ActivityLauncherBinding
         get() = getDataBinding(R.layout.activity_launcher)

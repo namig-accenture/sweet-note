@@ -1,16 +1,8 @@
 package app.views.registerfragment
 
-import android.arch.lifecycle.ViewModel
-import app.dagger.ViewModelKey
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
+import org.koin.android.architecture.ext.viewModel
+import org.koin.dsl.module.applicationContext
 
-@Module
-internal abstract class RegisterFragmentModule {
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(RegisterFragmentViewModel::class)
-    abstract fun provideRegisterFragmentViewModel(registerFragmentViewModel: RegisterFragmentViewModel): ViewModel
+val registerFragmentModule = applicationContext {
+    viewModel { RegisterFragmentViewModel(get(), get()) }
 }

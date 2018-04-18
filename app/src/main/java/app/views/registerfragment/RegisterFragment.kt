@@ -11,13 +11,14 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.koin.android.architecture.ext.viewModel
 
-@RegisterFragmentScope
 internal class RegisterFragment : BaseFragment<RegisterFragmentViewModel, FragmentRegisterBinding>() {
-    override val viewModel: RegisterFragmentViewModel
-        get() = provideViewModel()
+    private val registerViewModel by viewModel<RegisterFragmentViewModel>()
     override val layoutRes: Int
         get() = R.layout.fragment_register
+    override val viewModel: RegisterFragmentViewModel
+        get() = registerViewModel
     override val viewModelId: Int
         get() = BR.viewModel
 

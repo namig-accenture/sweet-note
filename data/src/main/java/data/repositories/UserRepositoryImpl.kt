@@ -1,15 +1,12 @@
 package data.repositories
 
-import data.dagger.scopes.AppScope
 import data.extensions.asEntity
 import data.persistance.login.UserDao
 import domain.model.UserModel
 import domain.repositories.UserRepository
 import io.reactivex.Completable
-import javax.inject.Inject
 
-@AppScope
-class UserRepositoryImpl @Inject constructor(private val userDao: UserDao) : UserRepository {
+class UserRepositoryImpl(private val userDao: UserDao) : UserRepository {
     override fun registerUser(userModel: UserModel): Long {
         return userDao.insert(userModel.asEntity)
     }

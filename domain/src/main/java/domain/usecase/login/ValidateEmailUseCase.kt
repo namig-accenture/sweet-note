@@ -2,9 +2,8 @@ package domain.usecase.login
 
 import domain.usecase.FlowableUseCase
 import io.reactivex.Observable
-import javax.inject.Inject
 
-class ValidateEmailUseCase @Inject constructor() : FlowableUseCase<String, Boolean>() {
+class ValidateEmailUseCase : FlowableUseCase<String, Boolean>() {
     override fun process(upstream: Observable<String>): Observable<Boolean> {
         return upstream.map(::isValidEmail).distinctUntilChanged().defaultIfEmpty(false)
     }

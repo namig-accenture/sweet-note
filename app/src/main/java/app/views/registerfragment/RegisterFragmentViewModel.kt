@@ -5,11 +5,9 @@ import app.ext.BaseViewModel
 import domain.usecase.login.ValidateEmailUseCase
 import domain.usecase.login.ValidatePasswordUseCase
 import io.reactivex.Observable
-import javax.inject.Inject
 
-@RegisterFragmentScope
-internal class RegisterFragmentViewModel @Inject constructor(private val validateEmailUseCase: ValidateEmailUseCase,
-                                                             private val validatePasswordUseCase: ValidatePasswordUseCase) : BaseViewModel() {
+internal class RegisterFragmentViewModel(private val validateEmailUseCase: ValidateEmailUseCase,
+                                         private val validatePasswordUseCase: ValidatePasswordUseCase) : BaseViewModel() {
     var email: String? = null
     var password: String? = null
     var isValidEmail = false

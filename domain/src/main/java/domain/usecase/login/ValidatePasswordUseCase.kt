@@ -2,9 +2,8 @@ package domain.usecase.login
 
 import domain.usecase.FlowableUseCase
 import io.reactivex.Observable
-import javax.inject.Inject
 
-class ValidatePasswordUseCase @Inject constructor() : FlowableUseCase<String, Boolean>() {
+class ValidatePasswordUseCase : FlowableUseCase<String, Boolean>() {
     override fun process(upstream: Observable<String>): Observable<Boolean> {
         return upstream.map(::isValidPassword)
     }

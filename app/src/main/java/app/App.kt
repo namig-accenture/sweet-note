@@ -1,25 +1,21 @@
 package app
 
-import android.app.Activity
 import android.app.Application
-import app.dagger.DaggerAppComponent
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import data.dagger.modules.DatabaseModule
-import data.dagger.modules.RepositoryModule
-import javax.inject.Inject
+import app.koin.appModule
+import com.example.namigtahmazli.sweetnote.BuildConfig
+import data.dataModule
+import domain.domainModule
+import org.koin.android.ext.android.setProperty
+import org.koin.android.ext.android.startKoin
 
-class App : Application(), HasActivityInjector {
-    @Inject
-    lateinit var activityInjector: DispatchingAndroidInjector<Activity>
+operator fun Array<Any>.plus(item: Array<Any>): Array<Any> {
+    return this.plus(item)
+}
 
-    override fun activityInjector(): AndroidInjector<Activity> = activityInjector
-
+class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        DaggerAppComponent.builder()
-                .create(this)
-                .inject(this)
+        startKoin(application = this, modules = (appModule + dataModule + domainModule))
+        setProperty("dbName", BuildConfig.DB_NAME)
     }
 }
