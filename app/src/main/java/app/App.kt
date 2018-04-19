@@ -8,10 +8,6 @@ import domain.domainModule
 import org.koin.android.ext.android.setProperty
 import org.koin.android.ext.android.startKoin
 
-operator fun Array<Any>.plus(item: Array<Any>): Array<Any> {
-    return this.plus(item)
-}
-
 class App : Application() {
     override fun onCreate() {
         super.onCreate()

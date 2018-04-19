@@ -1,13 +1,19 @@
 package tests.domain.usecase
 
+import domain.transformers.SchedulerTransformer
 import domain.usecase.login.ValidateEmailUseCase
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.TestScheduler
 import io.reactivex.subjects.BehaviorSubject
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.koin.dsl.module.applicationContext
+import org.koin.standalone.StandAloneContext.closeKoin
+import org.koin.standalone.StandAloneContext.startKoin
+import org.koin.test.KoinTest
 
-class ValidateEmailUseCaseTest {
+class ValidateEmailUseCaseTest : KoinTest {
     companion object {
         const val validEmail = "namig@gmail.com"
     }
@@ -17,7 +23,7 @@ class ValidateEmailUseCaseTest {
             "nam.@", "nam@", "nam@.",
             "nam@co", "nam@co$.com",
             "nam@g.co.", "nam@g.c",
-            "nam@_cs.com","nam@x._co"
+            "nam@_cs.com", "nam@x._co"
     )
 
     private lateinit var validateEmailUseCase: ValidateEmailUseCase
@@ -28,9 +34,16 @@ class ValidateEmailUseCaseTest {
     fun setUp() {
         testObserver = TestObserver()
         testScheduler = TestScheduler()
-        validateEmailUseCase = ValidateEmailUseCase().apply {
-            schedulerTransformer = TestSchedulerTransformer(testScheduler, testScheduler)
+        val testModule = applicationContext {
+            bean { TestSchedulerTransformer(testScheduler, testScheduler) as SchedulerTransformer }
         }
+        startKoin(listOf(testModule))
+        validateEmailUseCase = ValidateEmailUseCase()
+    }
+
+    @After
+    fun tareDown() {
+        closeKoin()
     }
 
     @Test

@@ -10,7 +10,9 @@ import data.persistance.login.UserEntity
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
@@ -19,6 +21,9 @@ class UserTableTest {
         const val email = "namig@gmail.com"
         const val password = "1234"
     }
+
+    @get:Rule
+    val expectedException = ExpectedException.none()
 
     private lateinit var userDao: UserDao
     private lateinit var database: AppDatabase
@@ -57,19 +62,10 @@ class UserTableTest {
     fun insertSameOrSameEmailedUserWillFail() {
         val user = createUser()
         userDao.insert(user)
-        try {
-            userDao.insert(user.apply { password = "Demo" })
-            assert(false)
-        } catch (ex: SQLiteConstraintException) {
-            assertThat("Assertion Failed", ex.message?.contains("UNIQUE constraint") == true)
-        }
-
-        try {
-            userDao.insert(user)
-            assert(false)
-        } catch (ex: SQLiteConstraintException) {
-            assertThat("Assertion Failed", ex.message?.contains("UNIQUE constraint") == true)
-        }
+        expectedException.expect(SQLiteConstraintException::class.java)
+        userDao.insert(user.apply { password = "Demo" })
+        expectedException.expect(SQLiteConstraintException::class.java)
+        userDao.insert(user)
     }
 
     @Test

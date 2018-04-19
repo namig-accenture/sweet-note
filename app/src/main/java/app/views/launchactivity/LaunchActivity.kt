@@ -1,5 +1,7 @@
 package app.views.launchactivity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.util.Log
@@ -16,6 +18,12 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.koin.android.architecture.ext.viewModel
 
 internal class LaunchActivity : BaseActivity<ActivityLauncherBinding>() {
+    companion object {
+        fun getIntent(context: Context): Intent {
+            return Intent(context, LaunchActivity::class.java)
+        }
+    }
+
     val viewModel by viewModel<LaunchActivityViewModel>()
 
     override val dataBinding: ActivityLauncherBinding
