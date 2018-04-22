@@ -1,4 +1,4 @@
-package app.koin
+package app.extensions
 
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar

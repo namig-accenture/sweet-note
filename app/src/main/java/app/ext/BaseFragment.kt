@@ -9,8 +9,8 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.koin.Duration
-import app.koin.showSnackBar
+import app.extensions.Duration
+import app.extensions.showSnackBar
 
 internal abstract class BaseFragment<out VM : BaseViewModel, DB : ViewDataBinding> : Fragment() {
     lateinit var dataBinding: DB
