@@ -4,12 +4,15 @@ import android.arch.persistence.room.Room
 import data.executor.JobExecutor
 import data.persistance.AppDatabase
 import data.repositories.UserRepositoryImpl
+import data.sharedpreference.PreferenceWrapper
 import domain.executor.ThreadExecutor
 import domain.repositories.UserRepository
+import domain.services.PreferenceService
 import org.koin.dsl.module.applicationContext
 
 val general = applicationContext {
     bean { JobExecutor() as ThreadExecutor }
+    bean { PreferenceWrapper(get()) as PreferenceService }
 }
 
 val database = applicationContext {
@@ -17,8 +20,4 @@ val database = applicationContext {
     bean { get<AppDatabase>().userDao() }
 }
 
-val repository = applicationContext {
-    bean { UserRepositoryImpl(get()) as UserRepository }
-}
-
-val dataModule = listOf(general, database, repository)
+val dataModule = listOf(general, database)

@@ -4,16 +4,17 @@ import android.support.annotation.IdRes
 import android.support.design.widget.TextInputLayout
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.action.ViewActions.typeText
+import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.intent.rule.IntentsTestRule
 import android.support.test.espresso.matcher.ViewMatchers
-import android.support.test.espresso.matcher.ViewMatchers.withId
+import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
+import app.view.TestModule
 import app.views.launchactivity.LaunchActivity
 import com.example.namigtahmazli.sweetnote.R
+import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -26,20 +27,15 @@ import org.koin.test.KoinTest
 
 @RunWith(AndroidJUnit4::class)
 internal class RegisterFragmentTest : KoinTest {
-
     @Suppress("MemberVisibilityCanBePrivate")
     @get:Rule
     val activityTestRule: IntentsTestRule<LaunchActivity> = IntentsTestRule(LaunchActivity::class.java, false, false)
 
     private val context = InstrumentationRegistry.getTargetContext()
 
-    private val emailError: String by lazy {
-        "Invalid"
-    }
+    private val emailError: String by lazy { "Invalid" }
 
-    private val passwordError: String by lazy {
-        "Invalid"
-    }
+    private val passwordError: String by lazy { "Invalid" }
 
     @Before
     fun setUp() {
@@ -90,8 +86,8 @@ internal class RegisterFragmentTest : KoinTest {
 
     @Test
     fun typeValidPasswordErrorWillBeGone() {
-        typeText(R.id.et_password, "abcAbc123@") {
-            val matcher = if (it == "abcAbc123@".lastIndex) {
+        typeText(R.id.et_password, TestModule.VALID_PASSWORD) {
+            val matcher = if (it == TestModule.VALID_PASSWORD.lastIndex) {
                 not(hasError(passwordError))
             } else {
                 hasError(passwordError)
@@ -102,10 +98,23 @@ internal class RegisterFragmentTest : KoinTest {
 
     @Test
     fun whenEmailAndPasswordAreValidRegisterButtonWillBeEnabled() {
-        onView(withId(R.id.et_email)).perform(typeText("a@b.co"))
+        onView(withId(R.id.et_email)).perform(typeText(TestModule.VALID_EMAIL))
         assertButtonEnabled(false)
-        onView(withId(R.id.et_password)).perform(typeText("abcAbc123@"))
+        onView(withId(R.id.et_password)).perform(typeText(TestModule.VALID_PASSWORD))
         assertButtonEnabled(true)
+    }
+
+    @Test
+    fun enterValidEmailAndPasswordPressRegisterSucceed() {
+        onView(withId(R.id.et_email)).perform(typeText(TestModule.VALID_EMAIL))
+        onView(withId(R.id.et_password)).perform(typeText(TestModule.VALID_PASSWORD), closeSoftKeyboard())
+        onView(withId(R.id.btn_register)).check(matches(isEnabled())).perform(click())
+        onView(withId(android.support.design.R.id.snackbar_text))
+                .check(matches(allOf(
+                        withId(android.support.design.R.id.snackbar_text),
+                        withText("Registered Successfully"),
+                        isDisplayed()
+                )))
     }
 
     private fun assertButtonEnabled(isEnabled: Boolean) {
@@ -113,7 +122,7 @@ internal class RegisterFragmentTest : KoinTest {
         onView(withId(R.id.btn_register)).check(matches(matcher))
     }
 
-    private fun typeText(@IdRes id: Int, text: String, conditionBlock: (Int) -> Unit) {
+    private inline fun typeText(@IdRes id: Int, text: String, conditionBlock: (Int) -> Unit) {
         text.map { it.toString() }.forEachIndexed { index, it ->
             onView(withId(id)).perform(typeText(it))
             conditionBlock(index)

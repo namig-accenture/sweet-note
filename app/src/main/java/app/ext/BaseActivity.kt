@@ -5,8 +5,11 @@ import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
+import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import app.koin.Duration
+import app.koin.showSnackBar
 
 internal abstract class BaseActivity<out DB : ViewDataBinding> : AppCompatActivity() {
     abstract val dataBinding: DB
@@ -28,5 +31,10 @@ internal abstract class BaseActivity<out DB : ViewDataBinding> : AppCompatActivi
         supportFragmentManager.beginTransaction()
                 .replace(container, block(), tag)
                 .commit()
+    }
+
+    fun showMessage(@StringRes messageId: Int? = null,
+                    message: String = "") {
+        dataBinding.root.showSnackBar(messageId = messageId, message = message, duration = Duration.LONG)
     }
 }

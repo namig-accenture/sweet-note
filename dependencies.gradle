@@ -22,6 +22,7 @@ ext {
     def roomVersion = '1.0.0'
     def mockitoVersion = '2.17.0'
     def koinVersion = '0.9.2'
+    def timberVersion = '4.7.0'
 
     def allDependencies = [
             kotlinStdLib         : "org.jetbrains.kotlin:kotlin-stdlib-jre7:${kotlinVersion}",
@@ -46,7 +47,8 @@ ext {
             mockitoAndroid       : "org.mockito:mockito-android:${mockitoVersion}",
             koin                 : "org.koin:koin-android:${koinVersion}",
             koinAndroidArch      : "org.koin:koin-android-architecture:${koinVersion}",
-            koinTest             : "org.koin:koin-test:${koinVersion}"
+            koinTest             : "org.koin:koin-test:${koinVersion}",
+            timber               : "com.jakewharton.timber:timber:${timberVersion}"
 
     ]
 
@@ -62,7 +64,8 @@ ext {
             allDependencies.rxKotlin,
             allDependencies.rxBinding,
             allDependencies.koin,
-            allDependencies.koinAndroidArch
+            allDependencies.koinAndroidArch,
+            allDependencies.timber
     ]
     appTestDependencies = [
             allDependencies.junit
@@ -72,6 +75,9 @@ ext {
             allDependencies.espresso,
             allDependencies.espressoIntent,
             allDependencies.koinTest,
+            allDependencies.mockitoCore,
+            allDependencies.mockitoAndroid,
+            allDependencies.timber
     ]
 
     dataDependencies = [

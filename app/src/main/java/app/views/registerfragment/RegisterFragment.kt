@@ -12,6 +12,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.koin.android.architecture.ext.viewModel
+import timber.log.Timber
 
 internal class RegisterFragment : BaseFragment<RegisterFragmentViewModel, FragmentRegisterBinding>() {
     private val registerViewModel by viewModel<RegisterFragmentViewModel>()
@@ -45,7 +46,15 @@ internal class RegisterFragment : BaseFragment<RegisterFragmentViewModel, Fragme
         return RxView.clicks(dataBinding.btnRegister)
                 .firstElement()
                 .subscribeBy(
-                        onSuccess = {}
+                        onSuccess = { disposables += observeRegistrationOfUser() }
+                )
+    }
+
+    private fun observeRegistrationOfUser(): Disposable {
+        return viewModel.registerUser()
+                .subscribeBy(
+                        onComplete = { showMessage(message = "Registered Successfully") },
+                        onError = { Timber.e(it) }
                 )
     }
 

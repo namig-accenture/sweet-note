@@ -1,17 +1,22 @@
 package app
 
 import android.app.Application
-import app.koin.appModule
+import app.koin.AppModule
 import com.example.namigtahmazli.sweetnote.BuildConfig
 import data.dataModule
 import domain.domainModule
 import org.koin.android.ext.android.setProperty
 import org.koin.android.ext.android.startKoin
 
-class App : Application() {
+open class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        startKoin(application = this, modules = (appModule + dataModule + domainModule))
+        startKoin()
         setProperty("dbName", BuildConfig.DB_NAME)
+        setProperty("prefName", "SweetPrefName")
+    }
+
+    open fun startKoin() {
+        startKoin(modules = (AppModule().appModule + dataModule + domainModule))
     }
 }

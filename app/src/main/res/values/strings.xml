@@ -7,4 +7,5 @@
     <string name="launch_activity_password_hint">Password</string>
     <string name="launch_activity_login">Login</string>
     <string name="launch_activity_login_with_gmail">Login with Gmail</string>
+    <string name="ok">OK</string>
 </resources>
