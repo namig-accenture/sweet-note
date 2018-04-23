@@ -41,7 +41,7 @@ internal class RegisterFragmentViewModel(private val validateEmailUseCase: Valid
     fun registerUser(): Completable {
         return email?.let email@{ email ->
             password?.let password@{ password ->
-                registerUserUseCase.get(UserModel(email, password))
+                registerUserUseCase.get(UserModel(email = email, password = password))
             } ?: return Completable.error(IllegalAccessError("Password is null"))
         } ?: Completable.error(IllegalAccessError("Email is null"))
     }

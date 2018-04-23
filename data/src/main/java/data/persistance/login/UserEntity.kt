@@ -10,5 +10,5 @@ import domain.model.UserModel
 data class UserEntity(@PrimaryKey var id: Long? = null,
                       var email: String,
                       var password: String) {
-    val userModel: UserModel get() = UserModel(email, password)
+    val userModel: UserModel get() = UserModel(id, email, password)
 }

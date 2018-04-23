@@ -38,7 +38,7 @@ class RegisterUserUseCaseTest : KoinTest {
             bean { TestSchedulerTransformer(testScheduler, testScheduler) as SchedulerTransformer }
             bean {
                 mock(UserRepository::class.java).apply {
-                    `when`(registerUser(safeEq(UserModel(EMAIL, PASSWORD)))).thenReturn(Single.just(1))
+                    `when`(registerUser(safeEq(UserModel(email = EMAIL, password = PASSWORD)))).thenReturn(Single.just(1))
                     `when`(saveLoggedInUserId(ArgumentMatchers.anyLong())).thenReturn(Completable.complete())
                 }
             }
@@ -62,7 +62,7 @@ class RegisterUserUseCaseTest : KoinTest {
     @Test
     fun registerUserSucceed() {
         registerUserUseCase
-                .get(UserModel(EMAIL, PASSWORD))
+                .get(UserModel(email = EMAIL, password = PASSWORD))
                 .subscribe(testObserver)
         testScheduler.triggerActions()
         testObserver.assertComplete()

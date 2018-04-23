@@ -8,7 +8,7 @@ repositories {
 }
 
 ext {
-    def kotlinVersion = '1.2.30'
+    def kotlinVersion = '1.2.40'
     def constraintLayoutVersion = '1.0.2'
     def appcompatVersion = '27.1.0'
     def androidArchVersion = '1.1.1'
@@ -23,6 +23,7 @@ ext {
     def mockitoVersion = '2.17.0'
     def koinVersion = '0.9.2'
     def timberVersion = '4.7.0'
+    def arrowVersion = '1.0.0'
 
     def allDependencies = [
             kotlinStdLib         : "org.jetbrains.kotlin:kotlin-stdlib-jre7:${kotlinVersion}",
@@ -48,8 +49,8 @@ ext {
             koin                 : "org.koin:koin-android:${koinVersion}",
             koinAndroidArch      : "org.koin:koin-android-architecture:${koinVersion}",
             koinTest             : "org.koin:koin-test:${koinVersion}",
-            timber               : "com.jakewharton.timber:timber:${timberVersion}"
-
+            timber               : "com.jakewharton.timber:timber:${timberVersion}",
+            arrow                : "com.fernandocejas:arrow:${arrowVersion}"
     ]
 
     appDependencies = [
@@ -65,10 +66,11 @@ ext {
             allDependencies.rxBinding,
             allDependencies.koin,
             allDependencies.koinAndroidArch,
-            allDependencies.timber
+            allDependencies.timber,
+            allDependencies.arrow
     ]
     appTestDependencies = [
-            allDependencies.junit
+            allDependencies.junit,
     ]
     appAndroidTestDependencies = [
             allDependencies.androidTestRunner,
@@ -77,7 +79,7 @@ ext {
             allDependencies.koinTest,
             allDependencies.mockitoCore,
             allDependencies.mockitoAndroid,
-            allDependencies.timber
+            allDependencies.timber,
     ]
 
     dataDependencies = [
@@ -87,7 +89,8 @@ ext {
             allDependencies.room,
             allDependencies.roomCompiler,
             allDependencies.roomRxSupport,
-            allDependencies.koin
+            allDependencies.koin,
+            allDependencies.arrow
     ]
     dataTestDependencies = [
             allDependencies.roomTestHelper,
@@ -101,7 +104,8 @@ ext {
             allDependencies.kotlinStdLib,
             allDependencies.rxJava,
             allDependencies.rxKotlin,
-            allDependencies.koin
+            allDependencies.koin,
+            allDependencies.arrow
     ]
     domainTestDependencies = [
             allDependencies.junit,

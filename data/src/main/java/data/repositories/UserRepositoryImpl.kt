@@ -1,6 +1,8 @@
 package data.repositories
 
+import com.fernandocejas.arrow.optional.Optional
 import data.extensions.asEntity
+import domain.extensions.asOptional
 import data.persistance.login.UserDao
 import domain.model.UserModel
 import domain.repositories.UserRepository
@@ -21,8 +23,8 @@ class UserRepositoryImpl(private val userDao: UserDao,
         return Single.fromCallable { userDao.insert(userModel.asEntity) }
     }
 
-    override fun logUserIn(email: String, password: String): Single<UserModel?> {
-        return Single.fromCallable { userDao.findUserByEmailAndPassword(email, password)?.userModel }
+    override fun logUserIn(email: String, password: String): Single<Optional<UserModel>> {
+        return Single.fromCallable { userDao.findUserByEmailAndPassword(email, password)?.userModel.asOptional }
     }
 
     override fun logUserOut(userModel: UserModel): Completable = Completable.complete()

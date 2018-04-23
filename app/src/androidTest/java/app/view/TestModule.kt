@@ -20,7 +20,7 @@ class TestModule : AppModule() {
         get() = applicationContext {
             bean {
                 Mockito.mock(UserRepository::class.java).apply {
-                    Mockito.`when`(registerUser(safeEq(UserModel(VALID_EMAIL, VALID_PASSWORD)))).thenReturn(Single.just(1))
+                    Mockito.`when`(registerUser(safeEq(UserModel(email = VALID_EMAIL, password = VALID_PASSWORD)))).thenReturn(Single.just(1))
                     Mockito.`when`(saveLoggedInUserId(ArgumentMatchers.anyLong())).thenReturn(Completable.complete())
                 } as UserRepository
             }
