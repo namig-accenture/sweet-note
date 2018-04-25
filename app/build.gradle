@@ -39,6 +39,8 @@ android {
 
 dependencies {
     implementation project(":domain")
+    testImplementation project(path:':domain', configuration: 'testOutput')
+    androidTestImplementation project(path:':domain', configuration: 'testOutput')
     implementation project(":data")
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     rootProject.fetchAllDependencies(this, delegate, '', 'implementation')

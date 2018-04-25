@@ -49,6 +49,7 @@
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="@{viewModel.isLoginButtonEnabled()}"
             android:text="@string/launch_activity_login" />
 
         <Button

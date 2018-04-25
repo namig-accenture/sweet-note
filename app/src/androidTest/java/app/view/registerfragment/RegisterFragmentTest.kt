@@ -1,7 +1,6 @@
 package app.view.registerfragment
 
 import android.support.annotation.IdRes
-import android.support.design.widget.TextInputLayout
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.*
@@ -10,15 +9,12 @@ import android.support.test.espresso.intent.rule.IntentsTestRule
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
-import android.view.View
 import app.view.TestModule
+import app.view.hasError
 import app.views.launchactivity.LaunchActivity
 import com.example.namigtahmazli.sweetnote.R
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
-import org.hamcrest.Description
-import org.hamcrest.Matcher
-import org.hamcrest.TypeSafeMatcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -41,21 +37,6 @@ internal class RegisterFragmentTest : KoinTest {
     fun setUp() {
         activityTestRule.launchActivity(LaunchActivity.getIntent(context))
         onView(withId(R.id.group_register)).perform(click())
-    }
-
-    private fun hasError(error: String): Matcher<View> {
-        return object : TypeSafeMatcher<View>() {
-            override fun describeTo(description: Description?) {
-                description?.appendText("Has Error")
-            }
-
-            override fun matchesSafely(item: View?): Boolean {
-                val testInputLayout = item as? TextInputLayout
-                        ?: throw IllegalAccessException("Not TextInputLayout")
-                return testInputLayout.error == error
-            }
-
-        }
     }
 
     @Test

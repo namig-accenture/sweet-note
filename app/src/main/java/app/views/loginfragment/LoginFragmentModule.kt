@@ -4,5 +4,5 @@ import org.koin.android.architecture.ext.viewModel
 import org.koin.dsl.module.applicationContext
 
 val loginFragmentModule = applicationContext {
-    viewModel { LoginFragmentViewModel() }
+    viewModel { LoginFragmentViewModel(get()) }
 }
