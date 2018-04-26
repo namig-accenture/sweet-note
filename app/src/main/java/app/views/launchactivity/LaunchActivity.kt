@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.IdRes
-import android.util.Log
 import app.ext.BaseActivity
 import app.views.loginfragment.LoginFragment
 import app.views.registerfragment.RegisterFragment
@@ -16,6 +15,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.koin.android.architecture.ext.viewModel
+import timber.log.Timber
 
 internal class LaunchActivity : BaseActivity<ActivityLauncherBinding>() {
     companion object {
@@ -50,12 +50,11 @@ internal class LaunchActivity : BaseActivity<ActivityLauncherBinding>() {
         return RxRadioGroup.checkedChanges(dataBinding.viewSwitcher)
                 .subscribeBy(
                         onNext = (::handleSwitchChanges),
-                        onError = { Log.e("Error", it.toString()) }
+                        onError = Timber::e
                 )
     }
 
     private fun handleSwitchChanges(@IdRes id: Int) {
-        Log.e("Radio Button Id", "$id")
         when (id) {
             R.id.group_login -> addFragment(R.id.container_layout) { LoginFragment() }
             R.id.group_register -> addFragment(R.id.container_layout) { RegisterFragment() }
