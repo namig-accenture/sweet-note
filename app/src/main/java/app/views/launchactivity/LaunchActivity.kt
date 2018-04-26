@@ -15,6 +15,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.koin.android.architecture.ext.viewModel
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 internal class LaunchActivity : BaseActivity<ActivityLauncherBinding>() {
@@ -25,6 +26,8 @@ internal class LaunchActivity : BaseActivity<ActivityLauncherBinding>() {
     }
 
     val viewModel by viewModel<LaunchActivityViewModel>()
+    private val loginFragment by inject<LoginFragment>()
+    private val registerFragment by inject<RegisterFragment>()
 
     override val dataBinding: ActivityLauncherBinding
         get() = getDataBinding(R.layout.activity_launcher)
@@ -56,8 +59,8 @@ internal class LaunchActivity : BaseActivity<ActivityLauncherBinding>() {
 
     private fun handleSwitchChanges(@IdRes id: Int) {
         when (id) {
-            R.id.group_login -> addFragment(R.id.container_layout) { LoginFragment() }
-            R.id.group_register -> addFragment(R.id.container_layout) { RegisterFragment() }
+            R.id.group_login -> addFragment(R.id.container_layout) { loginFragment }
+            R.id.group_register -> addFragment(R.id.container_layout) { registerFragment }
         }
     }
 }
