@@ -7,5 +7,11 @@
     <string name="launch_activity_password_hint">Password</string>
     <string name="launch_activity_login">Login</string>
     <string name="launch_activity_login_with_gmail">Login with Gmail</string>
+    <string name="register_fragment_invalid_password_message">
+        Should contain [a-zA-Z0-9@#$%^&amp;*()_+=]
+    </string>
+    <string name="register_fragment_invalid_email_message">Invalid Email</string>
+    <string name="login_fragment_password_not_defined_message">Password not defined.</string>
+    <string name="login_fragment_email_not_defined_message">Email not defined.</string>
     <string name="ok">OK</string>
 </resources>

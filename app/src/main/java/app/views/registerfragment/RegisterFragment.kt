@@ -26,11 +26,13 @@ internal class RegisterFragment : BaseFragment<FragmentRegisterBinding>() {
     }
 
     fun handleEtPasswordChanges(isValid: Boolean) {
-        dataBinding.passwordLayout.error = if (isValid) null else "Invalid"
+        dataBinding.passwordLayout.error = if (isValid) null
+        else getString(R.string.register_fragment_invalid_password_message)
     }
 
     fun handleEtEmailChanges(isValid: Boolean) {
-        dataBinding.emailLayout.error = if (isValid) null else "Invalid"
+        dataBinding.emailLayout.error = if (isValid) null
+        else getString(R.string.register_fragment_invalid_email_message)
     }
 
     fun handleUserRegistration() {

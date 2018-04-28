@@ -79,15 +79,15 @@ internal class RegisterFragmentTest : KoinTest {
 
     @Test
     fun whenEmailAndPasswordAreValidRegisterButtonWillBeEnabled() {
-        onView(withId(R.id.et_email)).perform(typeText(TestModule.VALID_EMAIL))
+        onView(withId(R.id.et_email)).perform(typeText(TestModule.VALID_EMAIL), closeSoftKeyboard())
         assertButtonEnabled(false)
-        onView(withId(R.id.et_password)).perform(typeText(TestModule.VALID_PASSWORD))
+        onView(withId(R.id.et_password)).perform(typeText(TestModule.VALID_PASSWORD), closeSoftKeyboard())
         assertButtonEnabled(true)
     }
 
     @Test
     fun enterValidEmailAndPasswordPressRegisterSucceed() {
-        onView(withId(R.id.et_email)).perform(typeText(TestModule.VALID_EMAIL))
+        onView(withId(R.id.et_email)).perform(typeText(TestModule.VALID_EMAIL), closeSoftKeyboard())
         onView(withId(R.id.et_password)).perform(typeText(TestModule.VALID_PASSWORD), closeSoftKeyboard())
         onView(withId(R.id.btn_register)).check(matches(isEnabled())).perform(click())
         onView(withId(android.support.design.R.id.snackbar_text))

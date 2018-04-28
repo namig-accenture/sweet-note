@@ -5,5 +5,5 @@ import org.koin.dsl.module.applicationContext
 
 val registerFragmentModule = applicationContext {
     viewModel { RegisterFragmentViewModel(get(), get(), get()) }
-    bean { params -> RegisterFragmentPresenter(params[RegisterFragment.FRAGMENT]) }
+    factory { params -> RegisterFragmentPresenter(params[RegisterFragment.FRAGMENT]) }
 }

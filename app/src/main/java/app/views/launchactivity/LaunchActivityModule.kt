@@ -7,7 +7,7 @@ import org.koin.dsl.module.applicationContext
 
 val launchActivityModule = applicationContext {
     viewModel { LaunchActivityViewModel() }
-    bean { LoginFragment() }
-    bean { RegisterFragment() }
-    bean { params -> LaunchActivityPresenter(params[LaunchActivity.ACTIVITY]) }
+    factory { LoginFragment() }
+    factory { RegisterFragment() }
+    factory { params -> LaunchActivityPresenter(params[LaunchActivity.ACTIVITY]) }
 }

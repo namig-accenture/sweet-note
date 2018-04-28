@@ -17,6 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.test.KoinTest
 
+@Suppress("MemberVisibilityCanBePrivate")
 @RunWith(AndroidJUnit4::class)
 internal class LaunchActivityTest : KoinTest {
 

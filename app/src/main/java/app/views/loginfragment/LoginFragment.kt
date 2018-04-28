@@ -38,11 +38,15 @@ internal class LoginFragment : BaseFragment<FragmentLoginBinding>() {
     }
 
     fun handlePasswordChanges(isValid: Boolean) {
-        dataBinding.passwordLayout.error = if (!isValid) "Password not defined" else null
+        dataBinding.passwordLayout.error = if (!isValid)
+            getString(R.string.login_fragment_password_not_defined_message)
+        else null
     }
 
     fun handleEmailChanges(isValid: Boolean) {
-        dataBinding.emailLayout.error = if (!isValid) "Email not defined" else null
+        dataBinding.emailLayout.error = if (!isValid)
+            getString(R.string.login_fragment_email_not_defined_message)
+        else null
     }
 
     companion object {

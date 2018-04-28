@@ -5,5 +5,5 @@ import org.koin.dsl.module.applicationContext
 
 val loginFragmentModule = applicationContext {
     viewModel { LoginFragmentViewModel(get()) }
-    bean {params -> LoginFragmentPresenter(params[LoginFragment.FRAGMENT]) }
+    factory {params -> LoginFragmentPresenter(params[LoginFragment.FRAGMENT]) }
 }
