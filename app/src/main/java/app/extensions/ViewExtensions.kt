@@ -1,5 +1,8 @@
 package app.extensions
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
+import android.databinding.ViewDataBinding
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.view.View
@@ -26,4 +29,12 @@ inline fun <V : View> V.showSnackBar(@StringRes messageId: Int? = null,
         setAction(buttonTextId, action)
         show()
     }
+}
+
+operator fun <L : Lifecycle> L.plusAssign(observer: LifecycleObserver) {
+    addObserver(observer)
+}
+
+operator fun <DB : ViewDataBinding> DB.set(id: Int, any: Any?) {
+    setVariable(id, any)
 }

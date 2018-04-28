@@ -13,6 +13,7 @@
 
         <activity
             android:name="app.views.launchactivity.LaunchActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

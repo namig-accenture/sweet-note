@@ -1,66 +1,48 @@
 package app.views.launchactivity
 
+import android.arch.lifecycle.Lifecycle
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.support.annotation.IdRes
 import app.ext.BaseActivity
+import app.extensions.plusAssign
+import app.extensions.set
 import app.views.loginfragment.LoginFragment
 import app.views.registerfragment.RegisterFragment
+import com.example.namigtahmazli.sweetnote.BR
 import com.example.namigtahmazli.sweetnote.R
 import com.example.namigtahmazli.sweetnote.databinding.ActivityLauncherBinding
-import com.jakewharton.rxbinding2.widget.RxRadioGroup
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.plusAssign
-import io.reactivex.rxkotlin.subscribeBy
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 internal class LaunchActivity : BaseActivity<ActivityLauncherBinding>() {
-    companion object {
-        fun getIntent(context: Context): Intent {
-            return Intent(context, LaunchActivity::class.java)
-        }
-    }
-
-    val viewModel by viewModel<LaunchActivityViewModel>()
+    private val launchActivityViewModel by viewModel<LaunchActivityViewModel>()
+    private val launchActivityPresenter by inject<LaunchActivityPresenter> { mapOf(ACTIVITY to this) }
     private val loginFragment by inject<LoginFragment>()
     private val registerFragment by inject<RegisterFragment>()
 
     override val dataBinding: ActivityLauncherBinding
-        get() = getDataBinding(R.layout.activity_launcher)
+        get() = provideDataBinding(R.layout.activity_launcher)
 
-    private lateinit var disposables: CompositeDisposable
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        disposables = CompositeDisposable()
+    override fun bindVariables(dataBinding: ActivityLauncherBinding) {
+        dataBinding[BR.viewModel] = launchActivityViewModel
     }
 
-    override fun onStart() {
-        super.onStart()
-        disposables += observeSwitchChanges()
+    override fun addLifecycleObservers(lifecycle: Lifecycle) {
+        lifecycle += launchActivityPresenter
     }
 
-    override fun onStop() {
-        super.onStop()
-        disposables.clear()
-    }
-
-    private fun observeSwitchChanges(): Disposable {
-        return RxRadioGroup.checkedChanges(dataBinding.viewSwitcher)
-                .subscribeBy(
-                        onNext = (::handleSwitchChanges),
-                        onError = Timber::e
-                )
-    }
-
-    private fun handleSwitchChanges(@IdRes id: Int) {
+    fun handleSwitchChanges(@IdRes id: Int) {
         when (id) {
             R.id.group_login -> addFragment(R.id.container_layout) { loginFragment }
             R.id.group_register -> addFragment(R.id.container_layout) { registerFragment }
+        }
+    }
+
+    companion object {
+        const val ACTIVITY = "LaunchActivity"
+        fun getIntent(context: Context): Intent {
+            return Intent(context, LaunchActivity::class.java)
         }
     }
 }

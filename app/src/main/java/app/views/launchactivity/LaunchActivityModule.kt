@@ -9,4 +9,5 @@ val launchActivityModule = applicationContext {
     viewModel { LaunchActivityViewModel() }
     bean { LoginFragment() }
     bean { RegisterFragment() }
+    bean { params -> LaunchActivityPresenter(params[LaunchActivity.ACTIVITY]) }
 }
