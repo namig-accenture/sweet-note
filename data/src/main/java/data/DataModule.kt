@@ -1,18 +1,18 @@
 package data
 
 import android.arch.persistence.room.Room
+import com.squareup.moshi.Moshi
 import data.executor.JobExecutor
 import data.persistance.AppDatabase
-import data.repositories.UserRepositoryImpl
 import data.sharedpreference.PreferenceWrapper
 import domain.executor.ThreadExecutor
-import domain.repositories.UserRepository
 import domain.services.PreferenceService
 import org.koin.dsl.module.applicationContext
 
 val general = applicationContext {
     bean { JobExecutor() as ThreadExecutor }
-    bean { PreferenceWrapper(get()) as PreferenceService }
+    bean { Moshi.Builder().build() as Moshi }
+    bean { PreferenceWrapper(get(), get()) as PreferenceService }
 }
 
 val database = applicationContext {

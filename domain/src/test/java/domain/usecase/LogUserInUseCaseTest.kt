@@ -1,4 +1,4 @@
-package tests.domain.usecase
+package domain.usecase
 
 import com.fernandocejas.arrow.optional.Optional
 import domain.extensions.asOptional
@@ -23,6 +23,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import domain.safeEq
 
 class LogUserInUseCaseTest : KoinTest {
     companion object {
@@ -30,20 +31,21 @@ class LogUserInUseCaseTest : KoinTest {
         const val PASSWORD = "abcABC123@#$"
     }
 
+    private val user by lazy { UserModel(id = 1, email = EMAIL, password = PASSWORD) }
+
     private val userModel by lazy {
         Single.just(UserModel(1, EMAIL, PASSWORD).asOptional)
     }
 
     private lateinit var testScheduler: TestScheduler
     private lateinit var testObserver: TestObserver<Any>
-    private fun provideTestModule(mockBlock: UserRepository.() -> Unit = {}): Module {
+    private inline fun provideTestModule(crossinline mockBlock: UserRepository.() -> Unit = {}): Module {
         return applicationContext {
             bean { TestSchedulerTransformer(testScheduler, testScheduler) as SchedulerTransformer }
             bean {
                 mock(UserRepository::class.java).apply {
-                    Mockito.`when`(logUserIn(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
-                            .thenReturn(userModel)
-                    Mockito.`when`(saveLoggedInUserId(ArgumentMatchers.anyLong())).thenReturn(Completable.complete())
+                    Mockito.`when`(logUserIn(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(userModel)
+                    Mockito.`when`(saveCurrentUser(safeEq(user))).thenReturn(Completable.complete())
                     mockBlock()
                 } as UserRepository
             }
@@ -67,7 +69,7 @@ class LogUserInUseCaseTest : KoinTest {
     @Test
     fun logUserInSucceed() {
         startKoin(listOf(provideTestModule()))
-        logUserInUseCase.get(UserModel(email = EMAIL, password = PASSWORD))
+        logUserInUseCase.get(user)
                 .subscribe(testObserver)
         testScheduler.triggerActions()
         testObserver.assertComplete()
@@ -79,7 +81,7 @@ class LogUserInUseCaseTest : KoinTest {
             `when`(logUserIn(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
                     .thenReturn(Single.just(Optional.absent()))
         }))
-        logUserInUseCase.get(UserModel(email = EMAIL, password = PASSWORD))
+        logUserInUseCase.get(user)
                 .subscribe(testObserver)
         testScheduler.triggerActions()
         testObserver.assertError { it is IllegalAccessException }

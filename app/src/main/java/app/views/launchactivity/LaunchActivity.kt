@@ -6,10 +6,8 @@ import android.content.Intent
 import android.support.annotation.IdRes
 import app.ext.BaseActivity
 import app.extensions.plusAssign
-import app.extensions.set
 import app.views.loginfragment.LoginFragment
 import app.views.registerfragment.RegisterFragment
-import com.example.namigtahmazli.sweetnote.BR
 import com.example.namigtahmazli.sweetnote.R
 import com.example.namigtahmazli.sweetnote.databinding.ActivityLauncherBinding
 import org.koin.android.architecture.ext.viewModel
@@ -22,11 +20,9 @@ internal class LaunchActivity : BaseActivity<ActivityLauncherBinding>() {
     private val registerFragment by inject<RegisterFragment>()
 
     override val dataBinding: ActivityLauncherBinding
-        get() = provideDataBinding(R.layout.activity_launcher)
-
-    override fun bindVariables(dataBinding: ActivityLauncherBinding) {
-        dataBinding[BR.viewModel] = launchActivityViewModel
-    }
+        get() = provideDataBinding(R.layout.activity_launcher).apply {
+            viewModel = launchActivityViewModel
+        }
 
     override fun addLifecycleObservers(lifecycle: Lifecycle) {
         lifecycle += launchActivityPresenter

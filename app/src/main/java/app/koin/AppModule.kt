@@ -4,6 +4,7 @@ import android.content.Context
 import app.executor.UIThread
 import app.views.launchactivity.launchActivityModule
 import app.views.loginfragment.loginFragmentModule
+import app.views.pinactivity.pinActivityModule
 import app.views.registerfragment.registerFragmentModule
 import data.repositories.UserRepositoryImpl
 import domain.executor.PostExecutionThread
@@ -18,7 +19,8 @@ open class AppModule {
     private val view = arrayOf(
             launchActivityModule,
             loginFragmentModule,
-            registerFragmentModule
+            registerFragmentModule,
+            pinActivityModule
     )
 
     open val repository = applicationContext {

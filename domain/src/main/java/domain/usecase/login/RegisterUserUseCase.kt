@@ -8,6 +8,6 @@ import io.reactivex.Completable
 class RegisterUserUseCase(private val userRepository: UserRepository) : CompletableParametrizedUseCase<UserModel>() {
     override fun build(param: UserModel): Completable {
         return userRepository.registerUser(param)
-                .flatMapCompletable { userRepository.saveLoggedInUserId(it) }
+                .flatMapCompletable { userRepository.saveCurrentUser(it) }
     }
 }

@@ -1,4 +1,4 @@
-package tests.domain.usecase
+package domain.usecase
 
 import domain.transformers.SchedulerTransformer
 import domain.usecase.login.ValidatePasswordUseCase

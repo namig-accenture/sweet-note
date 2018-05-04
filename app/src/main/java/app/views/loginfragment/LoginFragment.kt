@@ -7,6 +7,7 @@ import app.extensions.set
 import com.example.namigtahmazli.sweetnote.BR
 import com.example.namigtahmazli.sweetnote.R
 import com.example.namigtahmazli.sweetnote.databinding.FragmentLoginBinding
+import domain.exceptions.UserNotFoundException
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
 
@@ -33,7 +34,8 @@ internal class LoginFragment : BaseFragment<FragmentLoginBinding>() {
         when (throwable) {
             is LoginFragmentViewModel.ExceptionCase.EmailNotDefined -> handleEmailChanges(false)
             is LoginFragmentViewModel.ExceptionCase.PasswordNotDefined -> handlePasswordChanges(false)
-            else -> showMessage(message = "User not found")
+            is UserNotFoundException -> showMessage(messageId = R.string.login_fragment_user_not_found_error_message)
+            else -> showMessage(messageId = R.string.login_fragment_login_error_message)
         }
     }
 

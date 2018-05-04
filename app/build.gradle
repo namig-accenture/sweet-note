@@ -25,7 +25,7 @@ android {
 
             buildConfigField("String", "DB_NAME", "\"SweetNote.db\"")
         }
-        debug{
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
@@ -35,12 +35,15 @@ android {
     dataBinding {
         enabled true
     }
+    androidExtensions {
+        experimental = true
+    }
 }
 
 dependencies {
     implementation project(":domain")
-    testImplementation project(path:':domain', configuration: 'testOutput')
-    androidTestImplementation project(path:':domain', configuration: 'testOutput')
+    testImplementation project(path: ':domain', configuration: 'testOutput')
+    androidTestImplementation project(path: ':domain', configuration: 'testOutput')
     implementation project(":data")
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     rootProject.fetchAllDependencies(this, delegate, '', 'implementation')

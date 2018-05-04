@@ -6,7 +6,11 @@ import android.arch.persistence.room.PrimaryKey
 import domain.model.UserModel
 
 @Entity(tableName = "User",
-        indices = [Index(value = ["email"], unique = true), (Index(value = ["email", "password"]))])
+        indices = [
+            Index(value = ["email"], unique = true),
+            Index(value = ["email", "password"])
+        ]
+)
 data class UserEntity(@PrimaryKey var id: Long? = null,
                       var email: String,
                       var password: String) {

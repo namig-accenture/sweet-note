@@ -1,6 +1,9 @@
 package domain.services
 
+import com.fernandocejas.arrow.optional.Optional
+import domain.model.UserModel
+
 interface PreferenceService {
-    fun saveUserId(id: Long)
-    val userId: Long
+    fun saveUser(user: UserModel)
+    val currentUser: Optional<UserModel>
 }

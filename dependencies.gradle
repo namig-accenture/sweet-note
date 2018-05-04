@@ -18,12 +18,12 @@ ext {
     def rxJavaVersion = '2.1.12'
     def rxKotlinVersion = '2.2.0'
     def rxBindingVersion = '2.1.1'
-    def daggerVersion = '2.15'
     def roomVersion = '1.0.0'
     def mockitoVersion = '2.17.0'
     def koinVersion = '0.9.2'
     def timberVersion = '4.7.0'
     def arrowVersion = '1.0.0'
+    def moshiVersion = '1.5.0'
 
     def allDependencies = [
             kotlinStdLib         : "org.jetbrains.kotlin:kotlin-stdlib-jre7:${kotlinVersion}",
@@ -50,7 +50,8 @@ ext {
             koinAndroidArch      : "org.koin:koin-android-architecture:${koinVersion}",
             koinTest             : "org.koin:koin-test:${koinVersion}",
             timber               : "com.jakewharton.timber:timber:${timberVersion}",
-            arrow                : "com.fernandocejas:arrow:${arrowVersion}"
+            arrow                : "com.fernandocejas:arrow:${arrowVersion}",
+            moshi                : "com.squareup.moshi:moshi:${moshiVersion}",
     ]
 
     appDependencies = [
@@ -90,11 +91,14 @@ ext {
             allDependencies.roomCompiler,
             allDependencies.roomRxSupport,
             allDependencies.koin,
-            allDependencies.arrow
+            allDependencies.arrow,
+            allDependencies.moshi,
     ]
     dataTestDependencies = [
             allDependencies.roomTestHelper,
             allDependencies.junit,
+            allDependencies.koinTest,
+            allDependencies.koin,
     ]
     dataAndroidTestDependencies = [
             allDependencies.androidTestRunner,

@@ -6,9 +6,9 @@ import io.reactivex.Completable
 import io.reactivex.Single
 
 interface UserRepository {
-    fun registerUser(userModel: UserModel): Single<Long>
+    fun registerUser(userModel: UserModel): Single<UserModel>
     fun logUserIn(email: String, password: String): Single<Optional<UserModel>>
     fun logUserOut(userModel: UserModel): Completable
-    fun saveLoggedInUserId(id: Long): Completable
-    val loggedInUserId: Single<Long>
+    fun saveCurrentUser(user: UserModel): Completable
+    val currentUser: Single<Optional<UserModel>>
 }

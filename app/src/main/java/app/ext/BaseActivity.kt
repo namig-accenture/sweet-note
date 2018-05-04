@@ -15,14 +15,12 @@ import app.extensions.showSnackBar
 
 internal abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity(), LifecycleOwner {
     abstract val dataBinding: DB
-    abstract fun bindVariables(dataBinding: DB)
     abstract fun addLifecycleObservers(lifecycle: Lifecycle)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         addLifecycleObservers(lifecycle)
+        super.onCreate(savedInstanceState)
         setContentView(dataBinding.root)
-        bindVariables(dataBinding)
     }
 
     inline fun <reified A : BaseActivity<DB>> A.provideDataBinding(@LayoutRes layoutRes: Int): DB {

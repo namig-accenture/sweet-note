@@ -2,12 +2,14 @@ package app.extensions
 
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
+import android.content.res.TypedArray
 import android.databinding.ViewDataBinding
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.view.View
 import android.widget.TextView
 import com.example.namigtahmazli.sweetnote.R
+
 
 enum class Duration(val type: Int) {
     SHORT(Snackbar.LENGTH_SHORT), LONG(Snackbar.LENGTH_LONG)
@@ -37,4 +39,12 @@ operator fun <L : Lifecycle> L.plusAssign(observer: LifecycleObserver) {
 
 operator fun <DB : ViewDataBinding> DB.set(id: Int, any: Any?) {
     setVariable(id, any)
+}
+
+inline fun TypedArray.use(block: TypedArray.() -> Unit) {
+    try {
+        block()
+    } finally {
+        recycle()
+    }
 }

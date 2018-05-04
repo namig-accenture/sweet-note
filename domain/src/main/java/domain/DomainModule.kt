@@ -2,10 +2,7 @@ package domain
 
 import domain.transformers.AndroidSchedulerTransformer
 import domain.transformers.SchedulerTransformer
-import domain.usecase.login.LogUserInUseCase
-import domain.usecase.login.RegisterUserUseCase
-import domain.usecase.login.ValidateEmailUseCase
-import domain.usecase.login.ValidatePasswordUseCase
+import domain.usecase.login.*
 import org.koin.dsl.module.applicationContext
 
 val general = applicationContext {
@@ -17,6 +14,8 @@ val useCase = applicationContext {
     factory { ValidatePasswordUseCase() }
     factory { RegisterUserUseCase(get()) }
     factory { LogUserInUseCase(get()) }
+    factory { EnterPinUseCase(get()) }
+    factory { ValidatePinUseCase(get()) }
 }
 
 val domainModule = listOf(general, useCase)

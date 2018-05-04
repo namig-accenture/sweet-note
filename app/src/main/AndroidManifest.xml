@@ -22,5 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="app.views.pinactivity.PinActivity"
+            android:theme="@style/AppTheme.NoActionBar.Launcher" />
     </application>
 </manifest>

@@ -1,4 +1,4 @@
-package tests.domain
+package domain
 
 import org.mockito.Mockito
 

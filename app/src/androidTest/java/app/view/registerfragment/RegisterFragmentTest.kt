@@ -29,9 +29,9 @@ internal class RegisterFragmentTest : KoinTest {
 
     private val context = InstrumentationRegistry.getTargetContext()
 
-    private val emailError: String by lazy { "Invalid" }
+    private val emailError: String by lazy { context.getString(R.string.register_fragment_invalid_email_message) }
 
-    private val passwordError: String by lazy { "Invalid" }
+    private val passwordError: String by lazy { context.getString(R.string.register_fragment_invalid_password_message) }
 
     @Before
     fun setUp() {

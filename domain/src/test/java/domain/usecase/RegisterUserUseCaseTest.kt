@@ -1,4 +1,4 @@
-package tests.domain.usecase
+package domain.usecase
 
 import domain.model.UserModel
 import domain.repositories.UserRepository
@@ -17,16 +17,17 @@ import org.koin.standalone.StandAloneContext.closeKoin
 import org.koin.standalone.StandAloneContext.startKoin
 import org.koin.standalone.inject
 import org.koin.test.KoinTest
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import tests.domain.safeEq
+import domain.safeEq
 
 class RegisterUserUseCaseTest : KoinTest {
     companion object {
         const val EMAIL = "a@b.com"
         const val PASSWORD = "abc"
     }
+
+    private val user = UserModel(email = EMAIL, password = PASSWORD)
 
     private val registerUserUseCase: RegisterUserUseCase by inject()
 
@@ -38,8 +39,8 @@ class RegisterUserUseCaseTest : KoinTest {
             bean { TestSchedulerTransformer(testScheduler, testScheduler) as SchedulerTransformer }
             bean {
                 mock(UserRepository::class.java).apply {
-                    `when`(registerUser(safeEq(UserModel(email = EMAIL, password = PASSWORD)))).thenReturn(Single.just(1))
-                    `when`(saveLoggedInUserId(ArgumentMatchers.anyLong())).thenReturn(Completable.complete())
+                    `when`(registerUser(safeEq(user))).thenReturn(Single.just(user.copy(id = 1)))
+                    `when`(saveCurrentUser(safeEq(user.copy(id = 1)))).thenReturn(Completable.complete())
                 }
             }
             factory { RegisterUserUseCase(get()) }
