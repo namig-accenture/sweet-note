@@ -4,15 +4,21 @@ import android.arch.lifecycle.Lifecycle
 import app.ext.BaseFragment
 import app.extensions.plusAssign
 import app.extensions.set
+import app.parcelables.PinActivityIntentModel
+import app.views.launchactivity.LaunchActivity
+import app.views.pinactivity.PinActivity
 import com.example.namigtahmazli.sweetnote.BR
 import com.example.namigtahmazli.sweetnote.R
 import com.example.namigtahmazli.sweetnote.databinding.FragmentLoginBinding
 import domain.exceptions.UserNotFoundException
+import domain.model.EnterPinType
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.property
 
 internal class LoginFragment : BaseFragment<FragmentLoginBinding>() {
     val loginFragmentViewModel by viewModel<LoginFragmentViewModel>()
+    private val launchActivity by property<LaunchActivity>(LaunchActivity.ACTIVITY)
     private val loginFragmentPresenter by inject<LoginFragmentPresenter> { mapOf(FRAGMENT to this) }
 
     override val layoutRes: Int
@@ -27,7 +33,7 @@ internal class LoginFragment : BaseFragment<FragmentLoginBinding>() {
     }
 
     fun handleLogin() {
-        showMessage(message = "Logged in")
+        startActivity(PinActivity.provideIntent(launchActivity, PinActivityIntentModel(EnterPinType.Register)))
     }
 
     fun handleLoginError(throwable: Throwable) {
