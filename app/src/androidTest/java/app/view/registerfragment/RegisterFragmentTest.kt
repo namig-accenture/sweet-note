@@ -4,16 +4,19 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.intent.Intents.intended
+import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import android.support.test.espresso.matcher.ViewMatchers
-import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.espresso.matcher.ViewMatchers.isEnabled
+import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.runner.AndroidJUnit4
 import app.view.TestModule
 import app.view.hasError
 import app.view.provideIntentTestRule
 import app.view.typeText
 import app.views.launchactivity.LaunchActivity
+import app.views.pinactivity.PinActivity
 import com.example.namigtahmazli.sweetnote.R
-import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Rule
@@ -90,12 +93,7 @@ internal class RegisterFragmentTest : KoinTest {
         onView(withId(R.id.et_email)).perform(typeText(TestModule.VALID_EMAIL), closeSoftKeyboard())
         onView(withId(R.id.et_password)).perform(typeText(TestModule.VALID_PASSWORD), closeSoftKeyboard())
         onView(withId(R.id.btn_register)).check(matches(isEnabled())).perform(click())
-        onView(withId(android.support.design.R.id.snackbar_text))
-                .check(matches(allOf(
-                        withId(android.support.design.R.id.snackbar_text),
-                        withText("Registered Successfully"),
-                        isDisplayed()
-                )))
+        intended(hasComponent(PinActivity::class.java.name))
     }
 
     private fun assertButtonEnabled(isEnabled: Boolean) {
