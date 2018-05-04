@@ -14,7 +14,8 @@ val useCase = applicationContext {
     factory { ValidatePasswordUseCase() }
     factory { RegisterUserUseCase(get()) }
     factory { LogUserInUseCase(get()) }
-    factory { EnterPinUseCase(get()) }
+    factory { GetCurrentLoggedInUserUseCase(get()) }
+    factory { EnterPinUseCase(get(), get()) }
     factory { ValidatePinUseCase(get()) }
 }
 

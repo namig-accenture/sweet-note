@@ -1,4 +1,4 @@
-package app.view
+package app
 
 import android.support.annotation.IdRes
 import android.support.design.widget.TextInputLayout

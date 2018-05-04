@@ -93,6 +93,7 @@ ext {
             allDependencies.koin,
             allDependencies.arrow,
             allDependencies.moshi,
+            allDependencies.timber,
     ]
     dataTestDependencies = [
             allDependencies.roomTestHelper,

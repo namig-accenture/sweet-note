@@ -1,4 +1,4 @@
-package app.view
+package app
 
 import app.koin.AppModule
 import domain.extensions.asOptional

@@ -1,4 +1,4 @@
-package app.view
+package app
 
 import android.app.Activity
 import android.support.annotation.IdRes

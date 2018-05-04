@@ -6,23 +6,23 @@ import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
+import app.*
 import app.parcelables.PinActivityIntentModel
-import app.view.TestModule
-import app.view.assertButtonEnabled
-import app.view.provideActivityTestRule
-import app.view.typeText
 import app.views.pinactivity.PinActivity
 import com.example.namigtahmazli.sweetnote.R
 import com.fernandocejas.arrow.optional.Optional
 import domain.model.EnterPinType
+import domain.repositories.UserRepository
 import domain.sleep
 import io.reactivex.Single
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.standalone.StandAloneContext.closeKoin
 import org.mockito.Mockito.`when`
 
 @RunWith(AndroidJUnit4::class)
@@ -34,8 +34,17 @@ internal class PinActivityTest {
 
     private val context = InstrumentationRegistry.getTargetContext()
 
-    private fun launchActivity(type: EnterPinType) {
+    private fun launchActivity(type: EnterPinType, mock: UserRepository.() -> Unit = {}) {
+        TestModule.additionalUserRepositoryMock = mock
         activityTestRule.launchActivity(PinActivity.provideIntent(context, PinActivityIntentModel(type)))
+        sleep(1000)
+    }
+
+    @Before
+    fun setUp() {
+        closeKoin()
+        (context.applicationContext as TestApp).startKoin()
+        sleep(1000)
     }
 
     @Test
@@ -73,10 +82,9 @@ internal class PinActivityTest {
 
     @Test
     fun launchPinActivityForRegisteringPinIfNoCurrentLoggedInUserFoundWillShowError() {
-        TestModule.additionalUserRepositoryMock = {
+        launchActivity(EnterPinType.Register) {
             `when`(currentUser).thenReturn(Single.just(Optional.absent()))
         }
-        launchActivity(EnterPinType.Register)
         onView(withId(R.id.pin)).perform(typeText(TestModule.PIN), closeSoftKeyboard())
         onView(withId(R.id.btn_continue)).check(matches(isEnabled())).perform(click())
         onView(withId(android.support.design.R.id.snackbar_text)).check(matches(
@@ -124,10 +132,9 @@ internal class PinActivityTest {
 
     @Test
     fun launchPinActivityForLoggingWithPinIfCurrentUserNotFoundWillShowError() {
-        TestModule.additionalUserRepositoryMock = {
+        launchActivity(EnterPinType.Login) {
             `when`(currentUser).thenReturn(Single.just(Optional.absent()))
         }
-        launchActivity(EnterPinType.Login)
         TestModule.PIN.asIterable().typeText(R.id.pin) { index, lastIndex, _ ->
             if (index == lastIndex) {
                 onView(withId(R.id.pin)).perform(closeSoftKeyboard())

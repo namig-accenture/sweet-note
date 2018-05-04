@@ -10,19 +10,20 @@ import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.isEnabled
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.runner.AndroidJUnit4
-import app.view.TestModule
-import app.view.hasError
-import app.view.provideIntentTestRule
-import app.view.typeText
+import app.*
 import app.views.launchactivity.LaunchActivity
 import app.views.pinactivity.PinActivity
 import com.example.namigtahmazli.sweetnote.R
+import com.fernandocejas.arrow.optional.Optional
+import io.reactivex.Single
 import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.standalone.StandAloneContext.closeKoin
 import org.koin.test.KoinTest
+import org.mockito.Mockito
 
 @RunWith(AndroidJUnit4::class)
 internal class RegisterFragmentTest : KoinTest {
@@ -38,6 +39,11 @@ internal class RegisterFragmentTest : KoinTest {
 
     @Before
     fun setUp() {
+        TestModule.additionalUserRepositoryMock = {
+            Mockito.`when`(currentUser).thenReturn(Single.just(Optional.absent()))
+        }
+        closeKoin()
+        (context.applicationContext as TestApp).startKoin()
         activityTestRule.launchActivity(LaunchActivity.getIntent(context))
         onView(withId(R.id.group_register)).perform(click())
     }

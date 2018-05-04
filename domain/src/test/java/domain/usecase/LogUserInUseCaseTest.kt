@@ -24,6 +24,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import domain.safeEq
+import domain.transformers.DebugTransformer
 
 class LogUserInUseCaseTest : KoinTest {
     companion object {
@@ -42,6 +43,7 @@ class LogUserInUseCaseTest : KoinTest {
     private inline fun provideTestModule(crossinline mockBlock: UserRepository.() -> Unit = {}): Module {
         return applicationContext {
             bean { TestSchedulerTransformer(testScheduler, testScheduler) as SchedulerTransformer }
+            bean { (TestDebugTransformer() as DebugTransformer).asOptional }
             bean {
                 mock(UserRepository::class.java).apply {
                     Mockito.`when`(logUserIn(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(userModel)

@@ -2,10 +2,10 @@ package domain.usecase
 
 import io.reactivex.Single
 
-abstract class SingleParametrisedUseCase<in P, R> : BaseUseCase() {
-    abstract fun build(param: P): Single<R>
-    private fun make(param: P, wrap: Boolean): Single<R> {
-        val build = build(param)
+abstract class SingleUseCase<R> : BaseUseCase() {
+    abstract fun build(): Single<R>
+    private fun make(wrap: Boolean): Single<R> {
+        val build = build()
         val wrapped = if (wrap) wrap(build) else build
         return wrapDebug(wrapped)
     }
@@ -22,6 +22,6 @@ abstract class SingleParametrisedUseCase<in P, R> : BaseUseCase() {
         }
     }
 
-    fun get(param: P): Single<R> = make(param, true)
-    fun chain(param: P): Single<R> = make(param, false)
+    fun get(): Single<R> = make(true)
+    fun chain(): Single<R> = make(false)
 }

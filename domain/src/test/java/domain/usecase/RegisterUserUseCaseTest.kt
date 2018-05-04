@@ -1,5 +1,6 @@
 package domain.usecase
 
+import domain.extensions.asOptional
 import domain.model.UserModel
 import domain.repositories.UserRepository
 import domain.transformers.SchedulerTransformer
@@ -20,6 +21,7 @@ import org.koin.test.KoinTest
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import domain.safeEq
+import domain.transformers.DebugTransformer
 
 class RegisterUserUseCaseTest : KoinTest {
     companion object {
@@ -37,6 +39,7 @@ class RegisterUserUseCaseTest : KoinTest {
     private val testModule: Module by lazy {
         applicationContext {
             bean { TestSchedulerTransformer(testScheduler, testScheduler) as SchedulerTransformer }
+            bean { (TestDebugTransformer() as DebugTransformer).asOptional }
             bean {
                 mock(UserRepository::class.java).apply {
                     `when`(registerUser(safeEq(user))).thenReturn(Single.just(user.copy(id = 1)))

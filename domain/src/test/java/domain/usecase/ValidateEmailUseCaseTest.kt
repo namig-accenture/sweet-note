@@ -1,5 +1,7 @@
 package domain.usecase
 
+import domain.extensions.asOptional
+import domain.transformers.DebugTransformer
 import domain.transformers.SchedulerTransformer
 import domain.usecase.login.ValidateEmailUseCase
 import io.reactivex.observers.TestObserver
@@ -36,6 +38,7 @@ class ValidateEmailUseCaseTest : KoinTest {
         testScheduler = TestScheduler()
         val testModule = applicationContext {
             bean { TestSchedulerTransformer(testScheduler, testScheduler) as SchedulerTransformer }
+            bean { (TestDebugTransformer() as DebugTransformer).asOptional }
         }
         startKoin(listOf(testModule))
         validateEmailUseCase = ValidateEmailUseCase()

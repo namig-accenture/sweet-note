@@ -9,4 +9,6 @@
     <dimen name="text_small">12sp</dimen>
     <dimen name="text_medium">14dp</dimen>
 
+    <dimen name="view_size_medium">64dp</dimen>
+
 </resources>

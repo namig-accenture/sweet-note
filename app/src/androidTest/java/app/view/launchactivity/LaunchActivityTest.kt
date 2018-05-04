@@ -5,17 +5,26 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.intent.rule.IntentsTestRule
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.runner.AndroidJUnit4
+import app.TestApp
+import app.TestModule
+import app.provideIntentTestRule
 import app.views.launchactivity.LaunchActivity
 import com.example.namigtahmazli.sweetnote.R
+import com.fernandocejas.arrow.optional.Optional
+import domain.repositories.UserRepository
+import domain.sleep
+import io.reactivex.Single
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.standalone.StandAloneContext.closeKoin
 import org.koin.test.KoinTest
+import org.mockito.Mockito.`when`
 
 @Suppress("MemberVisibilityCanBePrivate")
 @RunWith(AndroidJUnit4::class)
@@ -24,17 +33,48 @@ internal class LaunchActivityTest : KoinTest {
     private val context: Context = InstrumentationRegistry.getTargetContext()
 
     @get:Rule
-    val activityTestRule: IntentsTestRule<LaunchActivity> = IntentsTestRule(LaunchActivity::class.java, false, false)
+    val activityTestRule = provideIntentTestRule<LaunchActivity>(launchActivity = false)
 
     @Before
     fun setUp() {
+        closeKoin()
+        (context.applicationContext as TestApp).startKoin()
+        sleep(1000)
+    }
+
+    @After
+    fun tareDown() {
+        TestModule.additionalUserRepositoryMock = {}
+    }
+
+    private fun launchActivity(mock: UserRepository.() -> Unit = {}) {
+        TestModule.additionalUserRepositoryMock = mock
         activityTestRule.launchActivity(LaunchActivity.getIntent(context))
+        sleep(1000)
+    }
+
+    @Test
+    fun ifCurrentlyLoggedInUserAvailableWillLaunchPinActivity() {
+        launchActivity()
+        onView(withId(R.id.pin)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun ifCurrentlyLoggedInUserNotAvailableWillShowLoginScreen() {
+        launchActivity {
+            `when`(currentUser).thenReturn(Single.just(Optional.absent()))
+        }
+        onView(withId(R.id.btn_login)).check(matches(isDisplayed()))
     }
 
     @Test
     fun switchRadioButtonsWillChangeFragments() {
+        launchActivity {
+            `when`(currentUser).thenReturn(Single.just(Optional.absent()))
+        }
         onView(withId(R.id.group_register)).perform(click())
         onView(withId(R.id.btn_register)).check(matches(isDisplayed()))
+        sleep(1000)
         onView(withId(R.id.group_login)).perform(click())
         onView(withId(R.id.btn_login)).check(matches(isDisplayed()))
     }

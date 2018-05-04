@@ -5,8 +5,10 @@ import domain.extensions.asOptional
 import domain.model.UserModel
 import domain.repositories.UserRepository
 import domain.safeEq
+import domain.transformers.DebugTransformer
 import domain.transformers.SchedulerTransformer
 import domain.usecase.login.EnterPinUseCase
+import domain.usecase.login.GetCurrentLoggedInUserUseCase
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
@@ -32,6 +34,7 @@ class EnterPinUseCaseTest : KoinTest {
     private inline fun provideTestModule(crossinline mock: UserRepository.() -> Unit = {}): Module {
         return applicationContext {
             bean { TestSchedulerTransformer(testScheduler, testScheduler) as SchedulerTransformer }
+            bean { (TestDebugTransformer() as DebugTransformer).asOptional }
             bean {
                 mock(UserRepository::class.java).apply {
                     `when`(currentUser).thenReturn(Single.just(user.asOptional))
@@ -39,7 +42,8 @@ class EnterPinUseCaseTest : KoinTest {
                     mock()
                 } as UserRepository
             }
-            bean { EnterPinUseCase(get()) }
+            bean { GetCurrentLoggedInUserUseCase(get()) }
+            bean { EnterPinUseCase(get(), get()) }
         }
     }
 
@@ -65,12 +69,13 @@ class EnterPinUseCaseTest : KoinTest {
         testObserver.assertComplete()
     }
 
-    @Test fun ifThereIsNotCurrentUserWillThrowException(){
+    @Test
+    fun ifThereIsNotCurrentUserWillThrowException() {
         startKoin(listOf(provideTestModule {
             `when`(currentUser).thenReturn(Single.just(Optional.absent()))
         }))
         enterPinUseCase.get("1234").subscribe(testObserver)
         testScheduler.triggerActions()
-        testObserver.assertError{it is IllegalAccessException && it.message == "No current user found"}
+        testObserver.assertError { it is IllegalAccessException && it.message == "No current user found" }
     }
 }

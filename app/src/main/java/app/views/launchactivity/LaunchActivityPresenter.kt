@@ -15,6 +15,7 @@ internal class LaunchActivityPresenter(private val activity: LaunchActivity) : B
     private lateinit var disposables: CompositeDisposable
 
     val dataBinding by lazy { activity.dataBinding }
+    val viewModel by lazy { activity.launchActivityViewModel }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun createDisposable() {
@@ -23,6 +24,7 @@ internal class LaunchActivityPresenter(private val activity: LaunchActivity) : B
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun initDisposables() {
+        disposables += observeCurrentUser()
         disposables += observeSwitchChanges()
     }
 
@@ -36,6 +38,15 @@ internal class LaunchActivityPresenter(private val activity: LaunchActivity) : B
                 .subscribeBy(
                         onNext = activity::handleSwitchChanges,
                         onError = Timber::e
+                )
+    }
+
+    private fun observeCurrentUser(): Disposable {
+        return viewModel.currentUser
+                .doOnSuccess{viewModel.showProgress.set(it.isPresent)}
+                .subscribeBy(
+                        onSuccess = activity::handleCurrentUserAvailibility,
+                        onError = activity::handleCurrentUserAvailibilityError
                 )
     }
 }

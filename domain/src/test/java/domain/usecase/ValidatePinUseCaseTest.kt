@@ -4,7 +4,9 @@ import com.fernandocejas.arrow.optional.Optional
 import domain.extensions.asOptional
 import domain.model.UserModel
 import domain.repositories.UserRepository
+import domain.transformers.DebugTransformer
 import domain.transformers.SchedulerTransformer
+import domain.usecase.login.GetCurrentLoggedInUserUseCase
 import domain.usecase.login.ValidatePinUseCase
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -33,12 +35,14 @@ class ValidatePinUseCaseTest : KoinTest {
             bean { TestScheduler() as Scheduler }
             bean { TestObserver<Boolean>() }
             bean { TestSchedulerTransformer(testScheduler, testScheduler) as SchedulerTransformer }
+            bean { (TestDebugTransformer() as DebugTransformer).asOptional }
             bean {
                 mock(UserRepository::class.java).apply {
                     `when`(currentUser).thenReturn(Single.just(user.asOptional))
                     mockBlock()
                 } as UserRepository
             }
+            factory { GetCurrentLoggedInUserUseCase(get()) }
             factory { ValidatePinUseCase(get()) }
         }
     }

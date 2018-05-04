@@ -1,4 +1,4 @@
-package app.view
+package app
 
 import android.app.Application
 import android.content.Context

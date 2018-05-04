@@ -7,16 +7,21 @@ import android.support.test.espresso.intent.Intents.intended
 import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.runner.AndroidJUnit4
-import app.view.TestModule
-import app.view.assertButtonEnabled
-import app.view.provideIntentTestRule
+import app.TestModule
+import app.assertButtonEnabled
+import app.provideIntentTestRule
 import app.views.launchactivity.LaunchActivity
 import app.views.pinactivity.PinActivity
 import com.example.namigtahmazli.sweetnote.R
+import com.fernandocejas.arrow.optional.Optional
+import domain.repositories.UserRepository
+import domain.sleep
+import io.reactivex.Single
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.test.KoinTest
+import org.mockito.Mockito.`when`
 
 @RunWith(AndroidJUnit4::class)
 internal class LoginFragmentTest : KoinTest {
@@ -26,21 +31,26 @@ internal class LoginFragmentTest : KoinTest {
 
     private val context = InstrumentationRegistry.getTargetContext()
 
-    private inline fun launchLoginFragment(mockBlock: () -> Unit = {}) {
-        mockBlock()
+    private fun launchLoginFragment(mock: UserRepository.() -> Unit = {}) {
+        TestModule.additionalUserRepositoryMock = mock
         activityTestRule.launchActivity(LaunchActivity.getIntent(context))
         onView(withId(R.id.group_login)).perform(click())
+        sleep(1000)
     }
 
     @Test
     fun doNotTypeEmailAndPasswordLoginButtonNotEnabled() {
-        launchLoginFragment()
+        launchLoginFragment{
+            `when`(currentUser).thenReturn(Single.just(Optional.absent()))
+        }
         assertButtonEnabled(R.id.btn_login, enabled = false)
     }
 
     @Test
     fun ifOneOfEmailOrPasswordIsMissedButtonWillNotEnabled() {
-        launchLoginFragment()
+        launchLoginFragment{
+            `when`(currentUser).thenReturn(Single.just(Optional.absent()))
+        }
         onView(withId(R.id.et_email)).perform(typeText("a@b.com"))
         assertButtonEnabled(R.id.btn_login, enabled = false)
         onView(withId(R.id.et_password)).perform(typeText("abc"))
@@ -49,7 +59,9 @@ internal class LoginFragmentTest : KoinTest {
 
     @Test
     fun loginInWithValidCredentials() {
-        launchLoginFragment()
+        launchLoginFragment{
+            `when`(currentUser).thenReturn(Single.just(Optional.absent()))
+        }
         onView(withId(R.id.et_email)).perform(typeText(TestModule.VALID_EMAIL))
         onView(withId(R.id.et_password)).perform(typeText(TestModule.VALID_PASSWORD), closeSoftKeyboard())
         onView(withId(R.id.btn_login)).perform(click())

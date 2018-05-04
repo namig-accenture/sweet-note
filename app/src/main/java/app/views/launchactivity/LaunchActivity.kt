@@ -6,17 +6,23 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.IdRes
 import app.ext.BaseActivity
+import app.ext.log
 import app.extensions.plusAssign
+import app.parcelables.PinActivityIntentModel
 import app.views.loginfragment.LoginFragment
+import app.views.pinactivity.PinActivity
 import app.views.registerfragment.RegisterFragment
 import com.example.namigtahmazli.sweetnote.R
 import com.example.namigtahmazli.sweetnote.databinding.ActivityLauncherBinding
+import com.fernandocejas.arrow.optional.Optional
+import domain.model.EnterPinType
+import domain.model.UserModel
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.android.setProperty
 
 internal class LaunchActivity : BaseActivity<ActivityLauncherBinding>() {
-    private val launchActivityViewModel by viewModel<LaunchActivityViewModel>()
+    val launchActivityViewModel by viewModel<LaunchActivityViewModel>()
     private val launchActivityPresenter by inject<LaunchActivityPresenter> { mapOf(ACTIVITY to this) }
     private val loginFragment by inject<LoginFragment>()
     private val registerFragment by inject<RegisterFragment>()
@@ -40,6 +46,17 @@ internal class LaunchActivity : BaseActivity<ActivityLauncherBinding>() {
             R.id.group_login -> addFragment(R.id.container_layout) { loginFragment }
             R.id.group_register -> addFragment(R.id.container_layout) { registerFragment }
         }
+    }
+
+    fun handleCurrentUserAvailibility(optionalUser: Optional<UserModel>) {
+        if (optionalUser.isPresent) {
+            startActivity(PinActivity.provideIntent(this, PinActivityIntentModel(EnterPinType.Login)))
+            finish()
+        }
+    }
+
+    fun handleCurrentUserAvailibilityError(throwable: Throwable) {
+        throwable.log<LaunchActivityPresenter>("While observing current logged in user.")
     }
 
     companion object {
