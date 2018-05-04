@@ -1,16 +1,16 @@
 package app.view.registerfragment
 
-import android.support.annotation.IdRes
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.intent.rule.IntentsTestRule
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
 import app.view.TestModule
 import app.view.hasError
+import app.view.provideIntentTestRule
+import app.view.typeText
 import app.views.launchactivity.LaunchActivity
 import com.example.namigtahmazli.sweetnote.R
 import org.hamcrest.CoreMatchers.allOf
@@ -25,7 +25,7 @@ import org.koin.test.KoinTest
 internal class RegisterFragmentTest : KoinTest {
     @Suppress("MemberVisibilityCanBePrivate")
     @get:Rule
-    val activityTestRule: IntentsTestRule<LaunchActivity> = IntentsTestRule(LaunchActivity::class.java, false, false)
+    val activityTestRule = provideIntentTestRule<LaunchActivity>(launchActivity = false)
 
     private val context = InstrumentationRegistry.getTargetContext()
 
@@ -41,15 +41,15 @@ internal class RegisterFragmentTest : KoinTest {
 
     @Test
     fun typeInvalidEmailErrorWillBeShown() {
-        typeText(R.id.et_email, "abc") {
+        "abc".asIterable().typeText(R.id.et_email) { _, _, _ ->
             onView(withId(R.id.email_layout)).check(matches(hasError(emailError)))
         }
     }
 
     @Test
     fun typeValidEmailErrorWillBeGone() {
-        typeText(R.id.et_email, "a@b.co") {
-            val matcher = if (it == "a@b.co".lastIndex) {
+        "a@b.co".asIterable().typeText(R.id.et_email) { index, lastIndex, _ ->
+            val matcher = if (index == lastIndex) {
                 not(hasError(emailError))
             } else {
                 hasError(emailError)
@@ -60,15 +60,15 @@ internal class RegisterFragmentTest : KoinTest {
 
     @Test
     fun typeInvalidPasswordErrorWillBeShown() {
-        typeText(R.id.et_password, "abcnd1234") {
+        "abcnd1234".asIterable().typeText(R.id.et_password) { _, _, _ ->
             onView(withId(R.id.password_layout)).check(matches(hasError(passwordError)))
         }
     }
 
     @Test
     fun typeValidPasswordErrorWillBeGone() {
-        typeText(R.id.et_password, TestModule.VALID_PASSWORD) {
-            val matcher = if (it == TestModule.VALID_PASSWORD.lastIndex) {
+        TestModule.VALID_PASSWORD.asIterable().typeText(R.id.et_password) { index, lastIndex, _ ->
+            val matcher = if (index == lastIndex) {
                 not(hasError(passwordError))
             } else {
                 hasError(passwordError)
@@ -101,12 +101,5 @@ internal class RegisterFragmentTest : KoinTest {
     private fun assertButtonEnabled(isEnabled: Boolean) {
         val matcher = if (isEnabled) ViewMatchers.isEnabled() else not(ViewMatchers.isEnabled())
         onView(withId(R.id.btn_register)).check(matches(matcher))
-    }
-
-    private inline fun typeText(@IdRes id: Int, text: String, conditionBlock: (Int) -> Unit) {
-        text.map { it.toString() }.forEachIndexed { index, it ->
-            onView(withId(id)).perform(typeText(it))
-            conditionBlock(index)
-        }
     }
 }
