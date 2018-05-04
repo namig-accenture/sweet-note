@@ -5,13 +5,13 @@ import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
-import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import app.view.TestModule
+import app.view.assertButtonEnabled
+import app.view.provideActivityTestRule
 import app.views.launchactivity.LaunchActivity
 import com.example.namigtahmazli.sweetnote.R
 import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.CoreMatchers.not
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,7 +21,7 @@ import org.koin.test.KoinTest
 internal class LoginFragmentTest : KoinTest {
     @Suppress("MemberVisibilityCanBePrivate")
     @get:Rule
-    val activityTestRule = ActivityTestRule(LaunchActivity::class.java, false, false)
+    val activityTestRule = provideActivityTestRule<LaunchActivity>(launchActivity = false)
 
     private val context = InstrumentationRegistry.getTargetContext()
 
@@ -34,16 +34,16 @@ internal class LoginFragmentTest : KoinTest {
     @Test
     fun doNotTypeEmailAndPasswordLoginButtonNotEnabled() {
         launchLoginFragment()
-        assertButtonEnabled(false)
+        assertButtonEnabled(R.id.btn_login, enabled = false)
     }
 
     @Test
     fun ifOneOfEmailOrPasswordIsMissedButtonWillNotEnabled() {
         launchLoginFragment()
         onView(withId(R.id.et_email)).perform(typeText("a@b.com"))
-        assertButtonEnabled(false)
+        assertButtonEnabled(R.id.btn_login, enabled = false)
         onView(withId(R.id.et_password)).perform(typeText("abc"))
-        assertButtonEnabled(true)
+        assertButtonEnabled(R.id.btn_login, enabled = true)
     }
 
     @Test
@@ -57,14 +57,5 @@ internal class LoginFragmentTest : KoinTest {
                         withText("Logged in"),
                         isDisplayed()
                 )))
-    }
-
-    private fun assertButtonEnabled(enabled: Boolean) {
-        val matcher = if (enabled) {
-            isEnabled()
-        } else {
-            not(isEnabled())
-        }
-        onView(withId(R.id.btn_login)).check(matches(matcher))
     }
 }
