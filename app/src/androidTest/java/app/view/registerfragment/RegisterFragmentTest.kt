@@ -45,7 +45,7 @@ internal class RegisterFragmentTest : KoinTest {
 
     @Before
     fun setUp() {
-        userRepository.apply {
+        userRepository.apply{
             Mockito.`when`(currentUser).thenReturn(Single.just(Optional.absent()))
         }
         activityTestRule.launchActivity(LaunchActivity.getIntent(context))
