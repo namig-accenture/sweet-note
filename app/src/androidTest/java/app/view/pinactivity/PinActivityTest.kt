@@ -6,11 +6,8 @@ import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
-import app.TestModule
-import app.assertButtonEnabled
+import app.*
 import app.parcelables.PinActivityIntentModel
-import app.provideActivityTestRule
-import app.typeText
 import app.views.pinactivity.PinActivity
 import com.example.namigtahmazli.sweetnote.R
 import com.fernandocejas.arrow.optional.Optional
@@ -68,7 +65,7 @@ internal class PinActivityTest : KoinTest {
     @Test
     fun launchPinActivityForRegisteringPinEnterPinClickContinueButtonSucceed() {
         launchActivity(EnterPinType.Register) {
-            `when`(currentUser).thenReturn(Single.just(TestModule.user.copy(id = TestModule.ID).asOptional))
+            `when`(currentUser).thenReturn(Single.just(testModule { user.copy(id = ID).asOptional }))
         }
         onView(withId(R.id.pin)).perform(typeText(TestModule.PIN), closeSoftKeyboard())
         onView(withId(R.id.btn_continue)).check(matches(isEnabled())).perform(click())
@@ -102,7 +99,7 @@ internal class PinActivityTest : KoinTest {
     @Test
     fun launchPinActivityForLoggingWithPinEnterValidPinWillSucceed() {
         launchActivity(EnterPinType.Login) {
-            `when`(currentUser).thenReturn(Single.just(TestModule.user.copy(id = TestModule.ID, pin = TestModule.PIN).asOptional))
+            `when`(currentUser).thenReturn(Single.just(testModule { user.copy(id = ID, pin = PIN).asOptional }))
         }
         TestModule.PIN.asIterable().typeText(R.id.pin) { i, li, _ ->
             if (i == li) {
@@ -118,10 +115,10 @@ internal class PinActivityTest : KoinTest {
 
     @Test
     fun launchPinActivityForLoggingWithPinEnterInvalidPinWillShowError() {
-        launchActivity(EnterPinType.Login){
-            `when`(currentUser).thenReturn(Single.just(TestModule.user.copy(id = TestModule.ID, pin = TestModule.PIN).asOptional))
+        launchActivity(EnterPinType.Login) {
+            `when`(currentUser).thenReturn(Single.just(testModule { user.copy(id = ID, pin = PIN).asOptional }))
         }
-        (4..8).typeText(R.id.pin) { index, lastIndex, _ ->
+        (4..7).typeText(R.id.pin) { index, lastIndex, _ ->
             if (index == lastIndex) {
                 sleep(1000)
                 onView(withId(android.support.design.R.id.snackbar_text)).check(matches(

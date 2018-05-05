@@ -8,6 +8,10 @@
         <variable
             name="viewModel"
             type="app.views.pinactivity.PinViewModel" />
+
+        <variable
+            name="presenter"
+            type="app.views.pinactivity.PinPresenter" />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -18,6 +22,7 @@
             android:id="@+id/pin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onTextChanged="@{presenter::onPinValueChanged}"
             android:text="@{viewModel.pin}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -33,6 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:enabled="@{viewModel.isContinueButtonEnabled}"
+            android:onClick="@{presenter::onBtnContinueClicked}"
             android:padding="@dimen/spacing_medium"
             android:text="@string/pin_activity_continue_button_text"
             android:visibility="@{viewModel.isContinueButtonVisible}"

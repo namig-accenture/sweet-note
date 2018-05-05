@@ -22,6 +22,7 @@ internal class PinActivity : BaseActivity<ActivityPinBinding>() {
     override val dataBinding: ActivityPinBinding
         get() = provideDataBinding(R.layout.activity_pin).apply {
             viewModel = pinViewModel
+            presenter = pinPresenter
         }
 
     override fun addLifecycleObservers(lifecycle: Lifecycle) {

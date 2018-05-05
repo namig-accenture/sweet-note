@@ -24,6 +24,7 @@
         </activity>
         <activity
             android:name="app.views.pinactivity.PinActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Launcher" />
     </application>
 </manifest>
