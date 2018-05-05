@@ -6,27 +6,30 @@ import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
-import app.*
+import app.TestModule
+import app.assertButtonEnabled
 import app.parcelables.PinActivityIntentModel
+import app.provideActivityTestRule
+import app.typeText
 import app.views.pinactivity.PinActivity
 import com.example.namigtahmazli.sweetnote.R
 import com.fernandocejas.arrow.optional.Optional
+import domain.extensions.asOptional
 import domain.model.EnterPinType
 import domain.repositories.UserRepository
 import domain.sleep
 import io.reactivex.Single
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
-import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.standalone.StandAloneContext.closeKoin
+import org.koin.standalone.inject
+import org.koin.test.KoinTest
 import org.mockito.Mockito.`when`
 
 @RunWith(AndroidJUnit4::class)
-internal class PinActivityTest {
+internal class PinActivityTest : KoinTest {
 
     @Suppress("MemberVisibilityCanBePrivate")
     @get:Rule
@@ -34,17 +37,11 @@ internal class PinActivityTest {
 
     private val context = InstrumentationRegistry.getTargetContext()
 
-    private fun launchActivity(type: EnterPinType, mock: UserRepository.() -> Unit = {}) {
-        TestModule.additionalUserRepositoryMock = mock
-        activityTestRule.launchActivity(PinActivity.provideIntent(context, PinActivityIntentModel(type)))
-        sleep(1000)
-    }
+    private val userRepository: UserRepository by inject()
 
-    @Before
-    fun setUp() {
-        closeKoin()
-        (context.applicationContext as TestApp).startKoin()
-        sleep(1000)
+    private fun launchActivity(type: EnterPinType, mock: UserRepository.() -> Unit = {}) {
+        userRepository.mock()
+        activityTestRule.launchActivity(PinActivity.provideIntent(context, PinActivityIntentModel(type)))
     }
 
     @Test
@@ -70,7 +67,9 @@ internal class PinActivityTest {
 
     @Test
     fun launchPinActivityForRegisteringPinEnterPinClickContinueButtonSucceed() {
-        launchActivity(EnterPinType.Register)
+        launchActivity(EnterPinType.Register) {
+            `when`(currentUser).thenReturn(Single.just(TestModule.user.copy(id = TestModule.ID).asOptional))
+        }
         onView(withId(R.id.pin)).perform(typeText(TestModule.PIN), closeSoftKeyboard())
         onView(withId(R.id.btn_continue)).check(matches(isEnabled())).perform(click())
         onView(withId(android.support.design.R.id.snackbar_text)).check(matches(
@@ -102,7 +101,9 @@ internal class PinActivityTest {
 
     @Test
     fun launchPinActivityForLoggingWithPinEnterValidPinWillSucceed() {
-        launchActivity(EnterPinType.Login)
+        launchActivity(EnterPinType.Login) {
+            `when`(currentUser).thenReturn(Single.just(TestModule.user.copy(id = TestModule.ID, pin = TestModule.PIN).asOptional))
+        }
         TestModule.PIN.asIterable().typeText(R.id.pin) { i, li, _ ->
             if (i == li) {
                 sleep(1000)
@@ -117,7 +118,9 @@ internal class PinActivityTest {
 
     @Test
     fun launchPinActivityForLoggingWithPinEnterInvalidPinWillShowError() {
-        launchActivity(EnterPinType.Login)
+        launchActivity(EnterPinType.Login){
+            `when`(currentUser).thenReturn(Single.just(TestModule.user.copy(id = TestModule.ID, pin = TestModule.PIN).asOptional))
+        }
         (4..8).typeText(R.id.pin) { index, lastIndex, _ ->
             if (index == lastIndex) {
                 sleep(1000)
@@ -146,10 +149,5 @@ internal class PinActivityTest {
                         )))
             }
         }
-    }
-
-    @After
-    fun tareDown() {
-        TestModule.additionalUserRepositoryMock = {}
     }
 }

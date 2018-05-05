@@ -20,7 +20,6 @@ class TestModule : AppModule() {
         const val VALID_PASSWORD = "abcAbc123@"
         const val PIN = "1234"
         val user = UserModel(email = VALID_EMAIL, password = VALID_PASSWORD)
-        var additionalUserRepositoryMock: UserRepository.() -> Unit = {}
     }
 
     override val repository: Module
@@ -32,8 +31,6 @@ class TestModule : AppModule() {
                     `when`(saveCurrentUser(safeEq(user.copy(id = ID, pin = PIN)))).thenReturn(Completable.complete())
                     `when`(logUserIn(anyString(), anyString())).thenReturn(Single.just(user.copy(id = ID).asOptional))
                     `when`(currentUser).thenReturn(Single.just(user.copy(id = ID).asOptional))
-                    `when`(currentUser).thenReturn(Single.just(user.copy(id = ID, pin = PIN).asOptional))
-                    additionalUserRepositoryMock()
                 } as UserRepository
             }
         }

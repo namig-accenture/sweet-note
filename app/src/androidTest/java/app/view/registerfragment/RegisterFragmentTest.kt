@@ -10,18 +10,22 @@ import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.isEnabled
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.runner.AndroidJUnit4
-import app.*
+import app.TestModule
+import app.hasError
+import app.provideIntentTestRule
+import app.typeText
 import app.views.launchactivity.LaunchActivity
 import app.views.pinactivity.PinActivity
 import com.example.namigtahmazli.sweetnote.R
 import com.fernandocejas.arrow.optional.Optional
+import domain.repositories.UserRepository
 import io.reactivex.Single
 import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.standalone.StandAloneContext.closeKoin
+import org.koin.standalone.inject
 import org.koin.test.KoinTest
 import org.mockito.Mockito
 
@@ -31,6 +35,8 @@ internal class RegisterFragmentTest : KoinTest {
     @get:Rule
     val activityTestRule = provideIntentTestRule<LaunchActivity>(launchActivity = false)
 
+    private val userRepository by inject<UserRepository>()
+
     private val context = InstrumentationRegistry.getTargetContext()
 
     private val emailError: String by lazy { context.getString(R.string.register_fragment_invalid_email_message) }
@@ -39,11 +45,9 @@ internal class RegisterFragmentTest : KoinTest {
 
     @Before
     fun setUp() {
-        TestModule.additionalUserRepositoryMock = {
+        userRepository.apply {
             Mockito.`when`(currentUser).thenReturn(Single.just(Optional.absent()))
         }
-        closeKoin()
-        (context.applicationContext as TestApp).startKoin()
         activityTestRule.launchActivity(LaunchActivity.getIntent(context))
         onView(withId(R.id.group_register)).perform(click())
     }

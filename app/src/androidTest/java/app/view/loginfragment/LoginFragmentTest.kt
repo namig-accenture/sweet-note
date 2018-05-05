@@ -15,11 +15,11 @@ import app.views.pinactivity.PinActivity
 import com.example.namigtahmazli.sweetnote.R
 import com.fernandocejas.arrow.optional.Optional
 import domain.repositories.UserRepository
-import domain.sleep
 import io.reactivex.Single
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.standalone.inject
 import org.koin.test.KoinTest
 import org.mockito.Mockito.`when`
 
@@ -31,16 +31,17 @@ internal class LoginFragmentTest : KoinTest {
 
     private val context = InstrumentationRegistry.getTargetContext()
 
+    private val userRepository: UserRepository by inject()
+
     private fun launchLoginFragment(mock: UserRepository.() -> Unit = {}) {
-        TestModule.additionalUserRepositoryMock = mock
+        userRepository.mock()
         activityTestRule.launchActivity(LaunchActivity.getIntent(context))
         onView(withId(R.id.group_login)).perform(click())
-        sleep(1000)
     }
 
     @Test
     fun doNotTypeEmailAndPasswordLoginButtonNotEnabled() {
-        launchLoginFragment{
+        launchLoginFragment {
             `when`(currentUser).thenReturn(Single.just(Optional.absent()))
         }
         assertButtonEnabled(R.id.btn_login, enabled = false)
@@ -48,7 +49,7 @@ internal class LoginFragmentTest : KoinTest {
 
     @Test
     fun ifOneOfEmailOrPasswordIsMissedButtonWillNotEnabled() {
-        launchLoginFragment{
+        launchLoginFragment {
             `when`(currentUser).thenReturn(Single.just(Optional.absent()))
         }
         onView(withId(R.id.et_email)).perform(typeText("a@b.com"))
@@ -59,7 +60,7 @@ internal class LoginFragmentTest : KoinTest {
 
     @Test
     fun loginInWithValidCredentials() {
-        launchLoginFragment{
+        launchLoginFragment {
             `when`(currentUser).thenReturn(Single.just(Optional.absent()))
         }
         onView(withId(R.id.et_email)).perform(typeText(TestModule.VALID_EMAIL))

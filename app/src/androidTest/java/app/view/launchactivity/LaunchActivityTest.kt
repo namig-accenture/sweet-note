@@ -8,8 +8,6 @@ import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.runner.AndroidJUnit4
-import app.TestApp
-import app.TestModule
 import app.provideIntentTestRule
 import app.views.launchactivity.LaunchActivity
 import com.example.namigtahmazli.sweetnote.R
@@ -17,12 +15,10 @@ import com.fernandocejas.arrow.optional.Optional
 import domain.repositories.UserRepository
 import domain.sleep
 import io.reactivex.Single
-import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.standalone.StandAloneContext.closeKoin
+import org.koin.standalone.inject
 import org.koin.test.KoinTest
 import org.mockito.Mockito.`when`
 
@@ -35,22 +31,11 @@ internal class LaunchActivityTest : KoinTest {
     @get:Rule
     val activityTestRule = provideIntentTestRule<LaunchActivity>(launchActivity = false)
 
-    @Before
-    fun setUp() {
-        closeKoin()
-        (context.applicationContext as TestApp).startKoin()
-        sleep(1000)
-    }
-
-    @After
-    fun tareDown() {
-        TestModule.additionalUserRepositoryMock = {}
-    }
+    private val userRepository by inject<UserRepository>()
 
     private fun launchActivity(mock: UserRepository.() -> Unit = {}) {
-        TestModule.additionalUserRepositoryMock = mock
+        userRepository.mock()
         activityTestRule.launchActivity(LaunchActivity.getIntent(context))
-        sleep(1000)
     }
 
     @Test
