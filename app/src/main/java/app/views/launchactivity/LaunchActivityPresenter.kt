@@ -2,14 +2,15 @@ package app.views.launchactivity
 
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.OnLifecycleEvent
+import android.support.annotation.IdRes
+import android.widget.RadioGroup
 import app.ext.BasePresenter
-import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
 
+@Suppress("UNUSED_PARAMETER")
 internal class LaunchActivityPresenter(private val activity: LaunchActivity) : BasePresenter() {
 
     private lateinit var disposables: CompositeDisposable
@@ -24,8 +25,8 @@ internal class LaunchActivityPresenter(private val activity: LaunchActivity) : B
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun initDisposables() {
+        onSwitchChanged(dataBinding.viewSwitcher, viewModel.currentStateId.get())
         disposables += observeCurrentUser()
-        disposables += observeSwitchChanges()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -33,17 +34,14 @@ internal class LaunchActivityPresenter(private val activity: LaunchActivity) : B
         disposables.clear()
     }
 
-    private fun observeSwitchChanges(): Disposable {
-        return RxRadioGroup.checkedChanges(dataBinding.viewSwitcher)
-                .subscribeBy(
-                        onNext = activity::handleSwitchChanges,
-                        onError = Timber::e
-                )
+    fun onSwitchChanged(radioGroup: RadioGroup, @IdRes checkedId: Int) {
+        viewModel.currentStateId.set(checkedId)
+        activity.handleSwitchChanges(checkedId)
     }
 
     private fun observeCurrentUser(): Disposable {
         return viewModel.currentUser
-                .doOnSuccess{viewModel.showProgress.set(it.isPresent)}
+                .doOnSuccess { viewModel.showProgress.set(it.isPresent) }
                 .subscribeBy(
                         onSuccess = activity::handleCurrentUserAvailibility,
                         onError = activity::handleCurrentUserAvailibilityError

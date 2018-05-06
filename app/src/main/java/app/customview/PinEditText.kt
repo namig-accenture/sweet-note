@@ -1,5 +1,6 @@
 package app.customview
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -119,5 +120,12 @@ internal class PinEditText : TextInputEditText {
         if ((text == null || text.isEmpty()) && hasFocus()) {
             canvas.drawRect(rectangles[0], selectedPinPaint)
         }
+    }
+
+    fun animateOnInValidPin() {
+        val objectAnimator = ObjectAnimator.ofInt(width / 2, -width / 2, width / 4, -width / 4, 0)
+        objectAnimator.duration = 2000L
+        objectAnimator.repeatCount = 20
+        objectAnimator.start()
     }
 }

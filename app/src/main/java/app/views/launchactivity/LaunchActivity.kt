@@ -30,6 +30,7 @@ internal class LaunchActivity : BaseActivity<ActivityLauncherBinding>() {
     override val dataBinding: ActivityLauncherBinding
         get() = provideDataBinding(R.layout.activity_launcher).apply {
             viewModel = launchActivityViewModel
+            presenter = launchActivityPresenter
         }
 
     override fun addLifecycleObservers(lifecycle: Lifecycle) {
@@ -50,7 +51,8 @@ internal class LaunchActivity : BaseActivity<ActivityLauncherBinding>() {
 
     fun handleCurrentUserAvailibility(optionalUser: Optional<UserModel>) {
         if (optionalUser.isPresent) {
-            startActivity(PinActivity.provideIntent(this, PinActivityIntentModel(EnterPinType.Login)))
+            val pinType = if (optionalUser.get().pin != null) EnterPinType.Login else EnterPinType.Register
+            startActivity(PinActivity.provideIntent(this, PinActivityIntentModel(pinType)))
             finish()
         }
     }

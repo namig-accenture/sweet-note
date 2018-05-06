@@ -9,12 +9,15 @@ import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.runner.AndroidJUnit4
 import app.provideIntentTestRule
+import app.testModule
 import app.views.launchactivity.LaunchActivity
 import com.example.namigtahmazli.sweetnote.R
 import com.fernandocejas.arrow.optional.Optional
+import domain.extensions.asOptional
 import domain.repositories.UserRepository
 import domain.sleep
 import io.reactivex.Single
+import org.hamcrest.CoreMatchers.not
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -40,8 +43,11 @@ internal class LaunchActivityTest : KoinTest {
 
     @Test
     fun ifCurrentlyLoggedInUserAvailableWillLaunchPinActivity() {
-        launchActivity()
+        launchActivity {
+            `when`(currentUser).thenReturn(Single.just(testModule { user.copy(id = ID, pin = PIN).asOptional }))
+        }
         onView(withId(R.id.pin)).check(matches(isDisplayed()))
+        onView(withId(R.id.btn_continue)).check(matches(not(isDisplayed())))
     }
 
     @Test
@@ -50,6 +56,14 @@ internal class LaunchActivityTest : KoinTest {
             `when`(currentUser).thenReturn(Single.just(Optional.absent()))
         }
         onView(withId(R.id.btn_login)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun ifUserRegisteredButNotEnteredPinPinActivityWillbeStartedToRegisterPin() {
+        launchActivity {
+            `when`(currentUser).thenReturn(Single.just(testModule { user.copy(id = ID).asOptional }))
+        }
+        onView(withId(R.id.btn_continue)).check(matches(isDisplayed()))
     }
 
     @Test

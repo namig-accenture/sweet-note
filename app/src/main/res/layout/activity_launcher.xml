@@ -6,6 +6,10 @@
         <variable
             name="viewModel"
             type="app.views.launchactivity.LaunchActivityViewModel" />
+
+        <variable
+            name="presenter"
+            type="app.views.launchactivity.LaunchActivityPresenter" />
     </data>
 
     <FrameLayout
@@ -33,7 +37,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="@dimen/spacing_medium"
-                    android:checkedButton="@id/group_login"
+                    android:checkedButton="@{viewModel.currentStateId}"
+                    android:onCheckedChanged="@{presenter::onSwitchChanged}"
                     android:orientation="horizontal">
 
                     <RadioButton
