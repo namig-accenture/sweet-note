@@ -7,6 +7,10 @@
         <variable
             name="viewModel"
             type="app.views.loginfragment.LoginFragmentViewModel" />
+
+        <variable
+            name="presenter"
+            type="app.views.loginfragment.LoginFragmentPresenter" />
     </data>
 
     <LinearLayout
@@ -26,7 +30,8 @@
                 android:id="@+id/et_email"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:onTextChanged="@{presenter::onEtEmailChanged}" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -42,7 +47,8 @@
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:onTextChanged="@{presenter::onEtPasswordChanged}" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
@@ -50,6 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="@{viewModel.validEmail &amp;&amp; viewModel.validPassword}"
+            android:onClick="@{presenter::onloginButtonClicked}"
             android:text="@string/launch_activity_login" />
 
         <Button

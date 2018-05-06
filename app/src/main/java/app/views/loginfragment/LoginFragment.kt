@@ -3,11 +3,9 @@ package app.views.loginfragment
 import android.arch.lifecycle.Lifecycle
 import app.ext.BaseFragment
 import app.extensions.plusAssign
-import app.extensions.set
 import app.parcelables.PinActivityIntentModel
 import app.views.launchactivity.LaunchActivity
 import app.views.pinactivity.PinActivity
-import com.example.namigtahmazli.sweetnote.BR
 import com.example.namigtahmazli.sweetnote.R
 import com.example.namigtahmazli.sweetnote.databinding.FragmentLoginBinding
 import domain.exceptions.UserNotFoundException
@@ -25,7 +23,8 @@ internal class LoginFragment : BaseFragment<FragmentLoginBinding>() {
         get() = R.layout.fragment_login
 
     override fun bindVariables(dataBinding: FragmentLoginBinding) {
-        dataBinding[BR.viewModel] = loginFragmentViewModel
+        dataBinding.viewModel = loginFragmentViewModel
+        dataBinding.presenter = loginFragmentPresenter
     }
 
     override fun addLifecycleObservers(lifecycle: Lifecycle) {

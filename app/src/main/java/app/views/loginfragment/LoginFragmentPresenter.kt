@@ -2,24 +2,28 @@ package app.views.loginfragment
 
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.OnLifecycleEvent
+import android.view.View
 import app.ext.BasePresenter
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 
+@Suppress("UNUSED_PARAMETER")
 internal class LoginFragmentPresenter(private val loginFragment: LoginFragment) : BasePresenter() {
 
     val viewModel by lazy { loginFragment.loginFragmentViewModel }
-    val dataBinding by lazy { loginFragment.dataBinding }
 
     private lateinit var disposables: CompositeDisposable
+    private lateinit var emailObserver: PublishSubject<CharSequence>
+    private lateinit var passwordObserver: PublishSubject<CharSequence>
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun createDisposables() {
+        emailObserver = PublishSubject.create()
+        passwordObserver = PublishSubject.create()
         disposables = CompositeDisposable()
     }
 
@@ -27,7 +31,6 @@ internal class LoginFragmentPresenter(private val loginFragment: LoginFragment) 
     fun initDisposables() {
         disposables += observeEtEmailChanges()
         disposables += observeEtPasswordChanges()
-        disposables += observeLoginButtonClick()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -35,8 +38,16 @@ internal class LoginFragmentPresenter(private val loginFragment: LoginFragment) 
         disposables.clear()
     }
 
+    fun onEtEmailChanged(email: CharSequence?, start: Int, before: Int, count: Int) {
+        email?.let { emailObserver.onNext(it) }
+    }
+
+    fun onEtPasswordChanged(password: CharSequence?, start: Int, before: Int, count: Int) {
+        password?.let { passwordObserver.onNext(it) }
+    }
+
     private fun observeEtEmailChanges(): Disposable {
-        return RxTextView.textChanges(dataBinding.etEmail)
+        return emailObserver
                 .skip(1)
                 .map(CharSequence::toString)
                 .doOnNext(viewModel.email::set)
@@ -49,7 +60,7 @@ internal class LoginFragmentPresenter(private val loginFragment: LoginFragment) 
     }
 
     private fun observeEtPasswordChanges(): Disposable {
-        return RxTextView.textChanges(dataBinding.etPassword)
+        return passwordObserver
                 .skip(1)
                 .map(CharSequence::toString)
                 .doOnNext(viewModel.password::set)
@@ -61,17 +72,8 @@ internal class LoginFragmentPresenter(private val loginFragment: LoginFragment) 
                 )
     }
 
-    private fun observeLoginButtonClick(): Disposable {
-        return RxView.clicks(dataBinding.btnLogin)
-                .firstElement()
-                .subscribeBy(
-                        onSuccess = { disposables += handleLoginButtonClick() },
-                        onError = Timber::e
-                )
-    }
-
-    private fun handleLoginButtonClick(): Disposable {
-        return viewModel.login()
+    fun onloginButtonClicked(view: View) {
+        viewModel.login()
                 .subscribeBy(
                         onComplete = loginFragment::handleLogin,
                         onError = loginFragment::handleLoginError
