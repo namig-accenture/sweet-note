@@ -8,16 +8,25 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.subjects.PublishSubject
 
 @Suppress("UNUSED_PARAMETER")
 internal class PinPresenter(private val pinActivity: PinActivity) : BasePresenter() {
     private lateinit var disposables: CompositeDisposable
+
+    private lateinit var pinObserver: PublishSubject<CharSequence>
 
     val viewModel by lazy { pinActivity.pinViewModel }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun createDisposable() {
         disposables = CompositeDisposable()
+        pinObserver = PublishSubject.create()
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun initObservers() {
+        disposables += observePinChanges()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -26,22 +35,25 @@ internal class PinPresenter(private val pinActivity: PinActivity) : BasePresente
     }
 
     fun onPinValueChanged(pin: CharSequence?, start: Int, before: Int, count: Int) {
-        pin?.toString()?.let {
-            viewModel.run {
-                this.pin.run {
-                    if (it == get()) {
-                        return
-                    }
-                    set(it)
-                }
-                (it.length == pinLength).let {
-                    isContinueButtonEnabled.set(it)
-                    if (it && !isContinueButtonVisible.get()) {
-                        disposables += observeValidatingPin()
-                    }
-                }
-            }
-        }
+        pin?.let { pinObserver.onNext(it) }
+    }
+
+    private fun observePinChanges(): Disposable {
+        return pinObserver
+                .map(CharSequence::toString)
+                .distinctUntilChanged()
+                .doOnNext(viewModel.pin::set)
+                .map { it.length == viewModel.pinLength }
+                .doOnNext(viewModel.isContinueButtonEnabled::set)
+                .map { it && !viewModel.isContinueButtonVisible.get() }
+                .subscribeBy(
+                        onNext = {
+                            println(it)
+                            if (it) {
+                                disposables += observeValidatingPin()
+                            }
+                        }
+                )
     }
 
     fun onBtnContinueClicked(view: View) {
