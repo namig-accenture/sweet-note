@@ -44,12 +44,11 @@ internal class PinActivity : BaseActivity<ActivityPinBinding>() {
     }
 
     fun handleValidatingPin(isValid: Boolean) {
-        val message = if (isValid) {
-            "Valid pin"
-        } else {
-            "Invalid pin"
+        if (!isValid) {
+            runOnUiThread {
+                dataBinding.pin.animateOnInValidPin()
+            }
         }
-        showMessage(message = message)
     }
 
     fun handleValidatingPinError(throwable: Throwable) {

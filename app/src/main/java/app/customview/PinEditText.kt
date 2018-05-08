@@ -123,9 +123,8 @@ internal class PinEditText : TextInputEditText {
     }
 
     fun animateOnInValidPin() {
-        val objectAnimator = ObjectAnimator.ofInt(width / 2, -width / 2, width / 4, -width / 4, 0)
-        objectAnimator.duration = 2000L
-        objectAnimator.repeatCount = 20
+        val objectAnimator = ObjectAnimator.ofFloat(this, "translationX", 0f, 25f, -25f, 25f, -25f, 15f, -15f, 6f, -6f, 0f)
+        objectAnimator.duration = 1000L
         objectAnimator.start()
     }
 }
