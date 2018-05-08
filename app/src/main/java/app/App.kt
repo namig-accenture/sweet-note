@@ -18,6 +18,6 @@ open class App : Application() {
         startKoin(modules = (AppModule().appModule + dataModule + domainModule))
         setProperty("Debug", BuildConfig.DEBUG)
         setProperty("dbName", BuildConfig.DB_NAME)
-        setProperty("prefName", "SweetPrefName")
+        setProperty("prefName", BuildConfig.PREF_NAME)
     }
 }
