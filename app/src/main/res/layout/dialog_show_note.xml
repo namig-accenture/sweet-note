@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="app.views.shownote.ShowNoteViewModel" />
+
+        <variable
+            name="presenter"
+            type="app.views.shownote.ShowNoteDialogPresenter" />
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_medium"
+        android:minHeight="256dp">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_medium">
+
+            <TextView
+                android:id="@+id/tv_title"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/aclonica"
+                android:text="@{viewModel.note.title}"
+                android:textColor="?android:attr/textColorSecondary"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="16dp"
+                tools:text="Facebook Profile" />
+
+            <app.customview.DrawableClickableTextView
+                android:id="@+id/tv_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:drawableEnd="@drawable/ic_content_copy_black_24dp"
+                android:drawablePadding="@dimen/spacing_large"
+                android:fontFamily="serif-monospace"
+                android:text="@{viewModel.note.userName}"
+                app:layout_constraintLeft_toLeftOf="@+id/tv_title"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title"
+                app:onDrawableTouchListener="@{presenter.onUsernameDrawableClicked}"
+                tools:layout_editor_absoluteX="16dp"
+                tools:text="demo@demo.comasasdasasdasd\nasdasdasd\nasdasdasd" />
+
+            <app.customview.DrawableClickableTextView
+                android:id="@+id/tv_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:drawableEnd="@drawable/ic_content_copy_black_24dp"
+                android:drawablePadding="@dimen/spacing_large"
+                android:fontFamily="serif-monospace"
+                android:text="@{viewModel.note.password}"
+                app:layout_constraintLeft_toLeftOf="@+id/tv_title"
+                app:layout_constraintTop_toBottomOf="@+id/tv_username"
+                app:onDrawableTouchListener="@{presenter.onPasswordDrawableClicked}"
+                tools:layout_editor_absoluteX="16dp"
+                tools:text="abcdAbcd123@#$\ndemo@demo.comasasdasasdasd\nasdasdasd\nasdasdasd" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+</layout>

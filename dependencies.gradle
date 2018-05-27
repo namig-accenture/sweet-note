@@ -24,6 +24,9 @@ ext {
     def timberVersion = '4.7.0'
     def arrowVersion = '1.0.0'
     def moshiVersion = '1.5.0'
+    def pagingVersion = '1.0.0'
+    def pagingRxJavaVersion = '1.0.0-alpha1'
+    def roomRxJavaVersion = '1.0.0-alpha1'
 
     def allDependencies = [
             kotlinStdLib         : "org.jetbrains.kotlin:kotlin-stdlib-jre7:${kotlinVersion}",
@@ -41,9 +44,11 @@ ext {
             rxKotlin             : "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
             rxBinding            : "com.jakewharton.rxbinding2:rxbinding:${rxBindingVersion}",
             room                 : ["android.arch.persistence.room:runtime:${roomVersion}"],
+            roomRxJava           : "android.arch.paging:rxjava2:${roomRxJavaVersion}",
             roomCompiler         : [dependency: "android.arch.persistence.room:compiler:${roomVersion}", type: 'kapt'],
             roomRxSupport        : ["android.arch.persistence.room:rxjava2:${roomVersion}"],
             roomTestHelper       : "android.arch.persistence.room:testing:${roomVersion}",
+            liveDataTestHelper   : "android.arch.core:core-testing:${androidArchVersion}",
             mockitoCore          : "org.mockito:mockito-core:${mockitoVersion}",
             mockitoAndroid       : "org.mockito:mockito-android:${mockitoVersion}",
             koin                 : "org.koin:koin-android:${koinVersion}",
@@ -52,6 +57,8 @@ ext {
             timber               : "com.jakewharton.timber:timber:${timberVersion}",
             arrow                : "com.fernandocejas:arrow:${arrowVersion}",
             moshi                : "com.squareup.moshi:moshi:${moshiVersion}",
+            paging               : "android.arch.paging:runtime:${pagingVersion}",
+            pagingRxJava         : "android.arch.paging:rxjava2:${pagingRxJavaVersion}"
     ]
 
     appDependencies = [
@@ -68,7 +75,9 @@ ext {
             allDependencies.koin,
             allDependencies.koinAndroidArch,
             allDependencies.timber,
-            allDependencies.arrow
+            allDependencies.arrow,
+            allDependencies.paging,
+            allDependencies.pagingRxJava
     ]
     appTestDependencies = [
             allDependencies.junit,
@@ -88,15 +97,19 @@ ext {
             allDependencies.rxJava,
             allDependencies.rxKotlin,
             allDependencies.room,
+            allDependencies.roomRxJava,
             allDependencies.roomCompiler,
             allDependencies.roomRxSupport,
             allDependencies.koin,
             allDependencies.arrow,
             allDependencies.moshi,
             allDependencies.timber,
+            allDependencies.paging,
+            allDependencies.pagingRxJava
     ]
     dataTestDependencies = [
             allDependencies.roomTestHelper,
+            allDependencies.liveDataTestHelper,
             allDependencies.junit,
             allDependencies.koinTest,
             allDependencies.koin,

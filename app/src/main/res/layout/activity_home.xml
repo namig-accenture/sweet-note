@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="app.views.homeactivity.HomeViewModel" />
+
+        <variable
+            name="presenter"
+            type="app.views.homeactivity.HomePresenter" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="6dp">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/ToolBarStyle"
+                app:navigationIcon="@drawable/animated_menu_to_back_icon"
+                app:title="@string/register" />
+        </android.support.design.widget.AppBarLayout>
+
+        <include
+            android:id="@+id/home_content"
+            layout="@layout/content_home"
+            bind:viewModel="@{viewModel}" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btn_add_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:layout_marginEnd="@dimen/spacing_medium"
+            android:onClick="@{presenter::onAddButtonClicked}"
+            android:tint="@android:color/white"
+            android:transitionName="@string/home_activity_add_button_transition_name"
+            app:fabSize="normal"
+            app:layout_anchor="@id/home_content"
+            app:layout_anchorGravity="bottom|end"
+            app:srcCompat="@drawable/ic_add_black_24dp" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

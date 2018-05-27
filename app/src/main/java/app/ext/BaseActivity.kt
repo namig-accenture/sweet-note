@@ -9,7 +9,9 @@ import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDialogFragment
 import app.extensions.Duration
 import app.extensions.showSnackBar
 
@@ -34,6 +36,18 @@ internal abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity()
         }
         supportFragmentManager.beginTransaction()
                 .replace(container, block(), tag)
+                .commit()
+    }
+
+    inline fun <reified F : AppCompatDialogFragment> addDialogFragment(block: () -> F,
+                                                                       transition: FragmentTransaction.() -> FragmentTransaction = { this }) {
+        val tag = F::class.java.name
+        supportFragmentManager.findFragmentByTag(tag)?.let {
+            return
+        }
+        supportFragmentManager.beginTransaction()
+                .add(block(), tag)
+                .transition()
                 .commit()
     }
 

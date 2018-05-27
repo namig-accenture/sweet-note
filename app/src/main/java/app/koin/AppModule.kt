@@ -2,12 +2,17 @@ package app.koin
 
 import android.content.Context
 import app.executor.UIThread
+import app.views.addeditnotedialog.addEditDialogModule
+import app.views.homeactivity.homeActivityModule
 import app.views.launchactivity.launchActivityModule
 import app.views.loginfragment.loginFragmentModule
 import app.views.pinactivity.pinActivityModule
 import app.views.registerfragment.registerFragmentModule
+import app.views.shownote.showNoteModule
+import data.repositories.NoteRepositoryImpl
 import data.repositories.UserRepositoryImpl
 import domain.executor.PostExecutionThread
+import domain.repositories.NoteRepository
 import domain.repositories.UserRepository
 import org.koin.dsl.module.applicationContext
 
@@ -20,11 +25,15 @@ open class AppModule {
             launchActivityModule,
             loginFragmentModule,
             registerFragmentModule,
-            pinActivityModule
+            pinActivityModule,
+            homeActivityModule,
+            showNoteModule,
+            addEditDialogModule
     )
 
     open val repository = applicationContext {
-        bean { UserRepositoryImpl(get(), get()) as UserRepository }
+        bean { UserRepositoryImpl(get(), get(), get()) as UserRepository }
+        bean { NoteRepositoryImpl(get()) as NoteRepository }
     }
 
     val appModule get() = listOf(general, *view, repository)

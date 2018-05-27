@@ -1,10 +1,9 @@
-package domain.usecase
+package domain.usecase.login
 
 import domain.extensions.asOptional
 import domain.model.UserModel
 import domain.repositories.UserRepository
 import domain.transformers.SchedulerTransformer
-import domain.usecase.login.RegisterUserUseCase
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
@@ -22,6 +21,8 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import domain.safeEq
 import domain.transformers.DebugTransformer
+import domain.usecase.TestDebugTransformer
+import domain.usecase.TestSchedulerTransformer
 
 class RegisterUserUseCaseTest : KoinTest {
     companion object {

@@ -5,3 +5,4 @@ class UserNotFoundException(message: String? = null) : IllegalAccessException(me
 class PinNotDefinedException(message: String? = null) : IllegalAccessException(message)
 class InvalidEmailException(message: String? = null) : IllegalAccessException(message)
 class InvalidPasswordException(message: String? = null) : IllegalAccessException(message)
+class FieldNotDefinedException(name: String) : IllegalAccessException("Paramether $name not defined")

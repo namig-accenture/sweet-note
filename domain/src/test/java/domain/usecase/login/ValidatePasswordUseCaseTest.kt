@@ -1,9 +1,10 @@
-package domain.usecase
+package domain.usecase.login
 
 import domain.extensions.asOptional
 import domain.transformers.DebugTransformer
 import domain.transformers.SchedulerTransformer
-import domain.usecase.login.ValidatePasswordUseCase
+import domain.usecase.TestDebugTransformer
+import domain.usecase.TestSchedulerTransformer
 import io.reactivex.Observable
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.TestScheduler

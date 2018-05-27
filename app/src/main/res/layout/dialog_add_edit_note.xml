@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="app.views.addeditnotedialog.AddEditNoteDialogPresenter" />
+
+        <variable
+            name="viewModel"
+            type="app.views.addeditnotedialog.AddEditNoteViewModel" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/ToolBarStyle"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                app:navigationIcon="@drawable/animated_menu_to_back_icon"
+                app:navigationOnClickListener="@{presenter.backNavigationClick}"
+                app:title="Add Note"
+                app:navigationContentDescription="@string/add_edit_note_dialog_home_button_content_description"
+                tools:title="Add Note" />
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/add_note_main_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_medium"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/spacing_medium">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/title_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:errorEnabled="true"
+                            app:error_text="@{viewModel.titleError}"
+                            app:hintEnabled="false"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <EditText
+                                android:id="@+id/et_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:fontFamily="@font/aclonica"
+                                android:hint="@string/add_edit_note_dialog_title_hint"
+                                android:inputType="text|textNoSuggestions"
+                                android:onTextChanged="@{presenter::onTitleTextChanged}"
+                                android:padding="@dimen/spacing_small"
+                                android:text="@{viewModel.title}" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/username_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:errorEnabled="true"
+                            app:error_text="@{viewModel.usernameError}"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/title_container">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/et_username"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:fontFamily="serif-monospace"
+                                android:hint="@string/add_edit_note_dialog_username_hint"
+                                android:inputType="textMultiLine|textNoSuggestions"
+                                android:onTextChanged="@{presenter::onUsernameTextChanged}"
+                                android:padding="@dimen/spacing_small"
+                                android:text="@{viewModel.username}" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/password_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:errorEnabled="true"
+                            app:error_text="@{viewModel.passwordError}"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/username_container"
+                            app:passwordToggleEnabled="true">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/et_password"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:fontFamily="serif-monospace"
+                                android:hint="@string/add_edit_note_dialog_password_hint"
+                                android:inputType="textMultiLine|textNoSuggestions"
+                                android:onTextChanged="@{presenter::onPasswordTextChanged}"
+                                android:padding="@dimen/spacing_small"
+                                android:text="@{viewModel.password}" />
+                        </android.support.design.widget.TextInputLayout>
+
+
+                        <Button
+                            android:id="@+id/btn_save_note"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_large"
+                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:enabled="@{viewModel.saveButtonEnabled}"
+                            android:onClick="@{presenter::onSaveButtonClicked}"
+                            android:text="@string/add_edit_note_dialog_save_button_text"
+                            android:textColor="?android:attr/colorControlNormal"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/password_container" />
+
+                    </android.support.constraint.ConstraintLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>
