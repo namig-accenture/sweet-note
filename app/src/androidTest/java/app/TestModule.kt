@@ -2,7 +2,9 @@ package app
 
 import app.koin.AppModule
 import domain.extensions.asOptional
+import domain.model.NoteModel
 import domain.model.UserModel
+import domain.repositories.NoteRepository
 import domain.repositories.UserRepository
 import domain.safeEq
 import io.reactivex.Completable
@@ -10,8 +12,7 @@ import io.reactivex.Single
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.applicationContext
 import org.mockito.Mockito
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.anyString
+import org.mockito.Mockito.*
 
 class TestModule : AppModule() {
     companion object {
@@ -32,6 +33,9 @@ class TestModule : AppModule() {
                     `when`(logUserIn(anyString(), anyString())).thenReturn(Single.just(user.copy(id = ID).asOptional))
                     `when`(currentUser).thenReturn(Single.just(user.copy(id = ID).asOptional))
                 } as UserRepository
+            }
+            bean {
+                mock(NoteRepository::class.java) as NoteRepository
             }
         }
 }

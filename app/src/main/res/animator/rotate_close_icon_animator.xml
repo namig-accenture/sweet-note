@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <objectAnimator
+        android:duration="2000"
+        android:interpolator="@android:anim/linear_interpolator"
+        android:propertyName="pathData"
+        android:valueFrom="M3,18h18v-2L3,16v2zM3,13h18v-2L3,11v2zM3,6v2h18L21,6L3,6z"
+        android:valueTo="M19,6.41L17.59,5 12,10.59 6.41,5 5,6.41 10.59,12 5,17.59 6.41,19 12,13.41 17.59,19 19,17.59 13.41,12z"
+        android:valueType="pathType" />
+
+    <objectAnimator
+        android:duration="2000"
+        android:interpolator="@android:anim/linear_interpolator"
+        android:propertyName="rotation"
+        android:valueFrom="0"
+        android:valueTo="180"
+        android:valueType="floatType" />
+</set>

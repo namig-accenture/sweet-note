@@ -1,6 +1,5 @@
 package data
 
-import android.arch.persistence.room.Room
 import com.squareup.moshi.Moshi
 import data.executor.JobExecutor
 import data.persistance.AppDatabase
@@ -29,8 +28,9 @@ val general = applicationContext {
 }
 
 val database = applicationContext {
-    bean { Room.databaseBuilder(get(), AppDatabase::class.java, getProperty("dbName")).build() }
+    bean { AppDatabase.create(get(), name = getProperty("dbName")) }
     bean { get<AppDatabase>().userDao() }
+    bean { get<AppDatabase>().noteDao() }
 }
 
 val dataModule = listOf(general, database)

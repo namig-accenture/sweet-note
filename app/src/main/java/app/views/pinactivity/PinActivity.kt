@@ -7,6 +7,7 @@ import app.ext.BaseActivity
 import app.ext.log
 import app.extensions.plusAssign
 import app.parcelables.PinActivityIntentModel
+import app.views.homeactivity.HomeActivity
 import com.example.namigtahmazli.sweetnote.R
 import com.example.namigtahmazli.sweetnote.databinding.ActivityPinBinding
 import domain.exceptions.CurrentUserNotFoundException
@@ -30,7 +31,7 @@ internal class PinActivity : BaseActivity<ActivityPinBinding>() {
     }
 
     fun handleRegisteringPin() {
-        showMessage(message = "Registered pin.")
+        navigateToHome()
     }
 
     fun handleRegisteringPinError(throwable: Throwable) {
@@ -48,7 +49,14 @@ internal class PinActivity : BaseActivity<ActivityPinBinding>() {
             runOnUiThread {
                 dataBinding.pin.animateOnInValidPin()
             }
+        }else{
+            navigateToHome()
         }
+    }
+
+    private fun navigateToHome(){
+        startActivity(HomeActivity.getIntent(this))
+        finish()
     }
 
     fun handleValidatingPinError(throwable: Throwable) {

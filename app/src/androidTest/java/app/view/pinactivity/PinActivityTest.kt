@@ -4,10 +4,13 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.intent.Intents.intended
+import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
 import app.*
 import app.parcelables.PinActivityIntentModel
+import app.views.homeactivity.HomeActivity
 import app.views.pinactivity.PinActivity
 import com.example.namigtahmazli.sweetnote.R
 import com.fernandocejas.arrow.optional.Optional
@@ -30,7 +33,7 @@ internal class PinActivityTest : KoinTest {
 
     @Suppress("MemberVisibilityCanBePrivate")
     @get:Rule
-    val activityTestRule = provideActivityTestRule<PinActivity>(launchActivity = false)
+    val activityTestRule = provideIntentTestRule<PinActivity>(launchActivity = false)
 
     private val context = InstrumentationRegistry.getTargetContext()
 
@@ -69,11 +72,7 @@ internal class PinActivityTest : KoinTest {
         }
         onView(withId(R.id.pin)).perform(typeText(TestModule.PIN), closeSoftKeyboard())
         onView(withId(R.id.btn_continue)).check(matches(isEnabled())).perform(click())
-        onView(withId(android.support.design.R.id.snackbar_text)).check(matches(
-                allOf(
-                        withText("Registered pin."),
-                        isDisplayed()
-                )))
+        intended(hasComponent(HomeActivity::class.java.name))
     }
 
     @Test
@@ -104,11 +103,7 @@ internal class PinActivityTest : KoinTest {
         TestModule.PIN.asIterable().typeText(R.id.pin) { i, li, _ ->
             if (i == li) {
                 sleep(1000)
-                onView(withId(android.support.design.R.id.snackbar_text)).check(matches(
-                        allOf(
-                                withText("Valid pin"),
-                                isDisplayed()
-                        )))
+                intended(hasComponent(HomeActivity::class.java.name))
             }
         }
     }
@@ -121,11 +116,7 @@ internal class PinActivityTest : KoinTest {
         (4..7).typeText(R.id.pin) { index, lastIndex, _ ->
             if (index == lastIndex) {
                 sleep(1000)
-                onView(withId(android.support.design.R.id.snackbar_text)).check(matches(
-                        allOf(
-                                withText("Invalid pin"),
-                                isDisplayed()
-                        )))
+                onView(withId(R.id.pin)).check(matches(isDisplayed()))
             }
         }
     }

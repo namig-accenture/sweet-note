@@ -26,4 +26,17 @@
     <string name="pin_activity_login_pin_error_message">Could not validate pin. Please try again.</string>
     <string name="pin_activity_register_pin_error_message">Could not register pin. Please try again.</string>
     <string name="pin_activity_current_user_not_found_error_message">No logged in user found.</string>
+
+    <string name="home_activity_add_button_transition_name">btn_add_note</string>
+    <string name="home_activity_no_notes_found_message">You don\'t have any notes.</string>
+
+    <string name="add_edit_note_dialog_title_hint">Title</string>
+    <string name="add_edit_note_dialog_username_hint">Username/Email</string>
+    <string name="add_edit_note_dialog_password_hint">Password</string>
+    <string name="add_edit_note_dialog_url_hint">Password</string>
+    <string name="add_edit_note_dialog_save_button_text">Save</string>
+    <string name="add_edit_note_dialog_title_not_defined_error">Title not defined.</string>
+    <string name="add_edit_note_dialog_username_not_defined_error">Username not defined.</string>
+    <string name="add_edit_note_dialog_password_not_defined_error">Password not defined.</string>
+    <string name="add_edit_note_dialog_home_button_content_description">Navigate up</string>
 </resources>

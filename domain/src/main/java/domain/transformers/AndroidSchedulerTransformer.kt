@@ -22,6 +22,10 @@ class AndroidSchedulerTransformer(threadExecutor: ThreadExecutor,
         return CompletableTransformer { it.subscribeOn(subscribeScheduler).observeOn(observeScheduler) }
     }
 
+    override fun <T> applyFlowableTransformer(): FlowableTransformer<T, T> {
+        return FlowableTransformer { it.subscribeOn(subscribeScheduler).observeOn(observeScheduler) }
+    }
+
     override fun <T> applySubscribeScheduler(observable: Observable<T>): Observable<T> {
         return observable.subscribeOn(subscribeScheduler)
     }
@@ -32,5 +36,9 @@ class AndroidSchedulerTransformer(threadExecutor: ThreadExecutor,
 
     override fun applySubscribeScheduler(completable: Completable): Completable {
         return completable.subscribeOn(subscribeScheduler)
+    }
+
+    override fun <T> applySubscribeScheduler(flowable: Flowable<T>): Flowable<T> {
+        return flowable.subscribeOn(subscribeScheduler)
     }
 }

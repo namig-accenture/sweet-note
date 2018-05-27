@@ -33,6 +33,7 @@ internal class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 
     fun handleLogin() {
         startActivity(PinActivity.provideIntent(launchActivity, PinActivityIntentModel(EnterPinType.Register)))
+        activity?.finish()
     }
 
     fun handleLoginError(throwable: Throwable) {

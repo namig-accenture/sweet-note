@@ -44,6 +44,7 @@ internal class RegisterFragment : BaseFragment<FragmentRegisterBinding>() {
 
     fun handleUserRegistration() {
         startActivity(PinActivity.provideIntent(launchActivity, PinActivityIntentModel(EnterPinType.Register)))
+        activity?.finish()
     }
 
     fun handleUserRegistrationError(throwable: Throwable) {
