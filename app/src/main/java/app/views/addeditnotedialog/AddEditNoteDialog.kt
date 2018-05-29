@@ -5,6 +5,7 @@ import android.arch.lifecycle.Lifecycle
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.support.annotation.MainThread
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.ColorUtils
 import android.view.LayoutInflater
@@ -15,8 +16,6 @@ import app.ext.log
 import app.extensions.*
 import com.example.namigtahmazli.sweetnote.R
 import com.example.namigtahmazli.sweetnote.databinding.DialogAddEditNoteBinding
-import domain.model.NoteModel
-import kotlinx.android.synthetic.main.abc_tooltip.*
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
 
@@ -57,7 +56,7 @@ internal class AddEditNoteDialog : BaseDialogFragment<DialogAddEditNoteBinding>(
                             duration = ANIMATION_DURATION
                             start()
                         }
-                        (dataBinding.toolbar.navigationIcon as AnimatedVectorDrawable).start()
+                        (dataBinding.toolbar.navigationIcon as AnimatedVectorDrawableCompat).start()
                     }
                 }
             }
@@ -120,13 +119,13 @@ internal class AddEditNoteDialog : BaseDialogFragment<DialogAddEditNoteBinding>(
         }
     }
 
-    fun handleAddingNoteResult(noteModel:NoteModel){
+    fun handleAddingNoteResult() {
         this.dismiss()
     }
 
-    fun handleAddingNoteError(throwable: Throwable){
+    fun handleAddingNoteError(throwable: Throwable) {
         throwable.log<AddEditNoteDialogPresenter>("While adding note.")
-        showMessage(message="Failed")
+        showMessage(message = "Failed")
     }
 
     companion object {

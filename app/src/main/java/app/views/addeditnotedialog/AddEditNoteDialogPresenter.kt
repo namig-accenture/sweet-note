@@ -48,7 +48,7 @@ internal class AddEditNoteDialogPresenter(private val dialog: AddEditNoteDialog)
     fun onSaveButtonClicked(view: View) {
         disposables += viewModel.addNote()
                 .subscribeBy(
-                        onSuccess = dialog::handleAddingNoteResult,
+                        onSuccess = { dialog.handleAddingNoteResult() },
                         onError = dialog::handleAddingNoteError
                 )
     }
