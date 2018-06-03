@@ -8,6 +8,7 @@ import app.views.launchactivity.launchActivityModule
 import app.views.loginfragment.loginFragmentModule
 import app.views.pinactivity.pinActivityModule
 import app.views.registerfragment.registerFragmentModule
+import app.views.searchdialog.searchModule
 import app.views.shownote.showNoteModule
 import data.repositories.NoteRepositoryImpl
 import data.repositories.UserRepositoryImpl
@@ -28,7 +29,8 @@ open class AppModule {
             pinActivityModule,
             homeActivityModule,
             showNoteModule,
-            addEditDialogModule
+            addEditDialogModule,
+            searchModule
     )
 
     open val repository = applicationContext {

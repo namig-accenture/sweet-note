@@ -29,6 +29,8 @@
 
     <string name="home_activity_add_button_transition_name">btn_add_note</string>
     <string name="home_activity_no_notes_found_message">You don\'t have any notes.</string>
+    <string name="home_activity_menu_search_title">Search</string>
+    <string name="home_activity_menu_search_hint">Search by title</string>
 
     <string name="add_edit_note_dialog_title_hint">Title</string>
     <string name="add_edit_note_dialog_username_hint">Username/Email</string>
@@ -39,4 +41,7 @@
     <string name="add_edit_note_dialog_username_not_defined_error">Username not defined.</string>
     <string name="add_edit_note_dialog_password_not_defined_error">Password not defined.</string>
     <string name="add_edit_note_dialog_home_button_content_description">Navigate up</string>
+
+    <string name="search_dialog_search_error_message">Something went wrong while searching.</string>
+    <string name="search_dialog_back_button_content_description">Clicking back button will take user to Home Activity</string>
 </resources>

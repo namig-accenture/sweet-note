@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="app.views.searchdialog.SearchPresenter" />
+
+        <variable
+            name="viewModel"
+            type="app.views.searchdialog.SearchViewModel"/>
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundColor">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryLight"
+                android:minHeight="?android:attr/actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Light"
+                app:contentInsetStartWithNavigation="0dp"
+                app:navigationContentDescription="@string/search_dialog_back_button_content_description"
+                app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+                app:navigationOnClickListener="@{presenter.backNavigationClick}">
+
+                <android.support.v7.widget.SearchView
+                    android:id="@+id/search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="start|center_vertical"
+                    app:iconifiedByDefault="false"
+                    app:query="@{viewModel.lastQuery}"
+                    app:onQueryTextListener="@{presenter.onQueryTextChanged}"
+                    app:queryBackground="@null"
+                    app:queryHint="@string/home_activity_menu_search_hint"
+                    app:searchHintIcon="@null"
+                    app:searchIcon="@null"
+                    app:submitBackground="@null" />
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycle_view_results"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

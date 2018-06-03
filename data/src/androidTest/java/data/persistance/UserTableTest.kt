@@ -1,10 +1,9 @@
-package data
+package data.persistance
 
 import android.arch.persistence.room.Room
 import android.database.sqlite.SQLiteConstraintException
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import data.persistance.AppDatabase
 import data.persistance.login.UserDao
 import data.persistance.login.UserEntity
 import org.hamcrest.MatcherAssert.assertThat

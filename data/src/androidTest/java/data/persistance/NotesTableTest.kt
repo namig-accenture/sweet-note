@@ -1,17 +1,14 @@
-package data
+package data.persistance
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import data.persistance.AppDatabase
 import data.persistance.login.UserDao
 import data.persistance.login.UserEntity
 import data.persistance.note.NoteDao
 import data.persistance.note.NoteEntity
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.TestScheduler
-import io.reactivex.subscribers.TestSubscriber
-import junit.framework.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -25,7 +22,8 @@ class NotesTableTest {
     private lateinit var testScheduler: TestScheduler
     private lateinit var testObserver: TestObserver<NoteEntity>
 
-    @get:Rule
+    @JvmField
+    @Rule
     val instantTaskExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
@@ -54,21 +52,12 @@ class NotesTableTest {
         )
         val id = noteDao.insert(note)
         noteDao.findNoteById(noteId = id)
-                .subscribeOn(testScheduler)
-                .subscribe(testObserver)
-        testScheduler.triggerActions()
-        testObserver.assertValue {
-            it == note.copy(id = it.id)
-        }
+                .test()
+                .assertValue { it == note.copy(id = it.id) }
     }
 
     @Test
     fun selectNotesPageByPageSucceed() {
-        val testSubscriber: TestSubscriber<List<NoteEntity>> = object : TestSubscriber<List<NoteEntity>>() {
-            override fun onNext(list: List<NoteEntity>?) {
-                assertTrue(list != null && list.size == 20 && list.first().id == 90L && list.last().id == 90 - 19L)
-            }
-        }
         val userId = insertUser()
         (1..90).forEach {
             noteDao.insert(NoteEntity(
@@ -79,19 +68,13 @@ class NotesTableTest {
             ))
         }
 
-        noteDao.findNotesByUserId(userId, 20,0)
-                .subscribeOn(testScheduler)
-                .subscribe(testSubscriber)
-        testScheduler.triggerActions()
+        noteDao.findNotesByUserId(userId, 20, 0)
+                .test()
+                .assertValue { list -> list.size == 20 && list.first().id == 90L && list.last().id == 71L }
     }
 
     @Test
     fun selectNotesPageByPageFromIdSucceed() {
-        val testSubscriber: TestSubscriber<List<NoteEntity>> = object : TestSubscriber<List<NoteEntity>>() {
-            override fun onNext(list: List<NoteEntity>?) {
-                assertTrue(list != null && list.size == 20 && list.first().id == 69L && list.last().id == 69 - 19L)
-            }
-        }
         val userId = insertUser()
         (1..90).forEach {
             noteDao.insert(NoteEntity(
@@ -103,46 +86,31 @@ class NotesTableTest {
         }
 
         noteDao.findNotesByUserId(userId, 20, 70)
-                .subscribeOn(testScheduler)
-                .subscribe(testSubscriber)
-        testScheduler.triggerActions()
+                .test()
+                .assertValue { list -> list.size == 20 && list.first().id == 20L && list.last().id == 1L }
     }
 
     @Test
     fun ifNoNoteFoundForIdWillReturnNothing() {
-        val testObserver = TestObserver<NoteEntity>()
         noteDao.findNoteById(1)
-                .subscribeOn(testScheduler)
-                .subscribe(testObserver)
-        testScheduler.triggerActions()
-        testObserver.assertComplete()
-        testObserver.assertNoErrors()
-        testObserver.assertValueCount(0)
+                .test()
+                .assertComplete()
+                .assertNoErrors()
+                .assertNoValues()
+
     }
 
     @Test
     fun ifNoNoteFoundForUserNotingWillBeReturned() {
-        val testSubscriber = object : TestSubscriber<List<NoteEntity>>() {
-            override fun onComplete() {
-                assertTrue(true)
-            }
-
-            override fun onNext(t: List<NoteEntity>?) {
-                assertTrue(t != null && t.isEmpty())
-            }
-
-            override fun onError(t: Throwable?) {
-                assertTrue(false)
-            }
-        }
-        noteDao.findNotesByUserId(1, 20,0)
-                .subscribeOn(testScheduler)
-                .subscribe(testSubscriber)
-        testScheduler.triggerActions()
+        noteDao.findNotesByUserId(1, 20, 0)
+                .test()
+                .assertNotComplete()
+                .assertValue { it.isEmpty() }
+                .assertNoErrors()
     }
 
     @Test
-    fun insertingNewLineWillBeObserver() {
+    fun insertingNewLineWillBeObserved() {
         val userId = insertUser()
         val note = NoteEntity(
                 userId = userId,
@@ -150,17 +118,35 @@ class NotesTableTest {
                 password = "123",
                 title = "Demo"
         )
+        noteDao.insert(note)
+        noteDao.findNotesByUserId(userId, 20, 0)
+                .test()
+                .assertValue { it.isNotEmpty() && it.size == 1 && it.first() == note.copy(id = 1) }
+    }
 
-        val testSubscriber = object : TestSubscriber<List<NoteEntity>>() {
-            override fun onNext(t: List<NoteEntity>?) {
-                assertTrue(t != null && t.isNotEmpty() && t.size == 1 && t.first() == note)
-            }
+    @Test
+    fun queryNotesByTitleSucceed() {
+        val userId = insertUser()
+        (0..5).forEach {
+            val note = NoteEntity(
+                    userId = userId,
+                    userName = "username$it",
+                    password = "password$it",
+                    title = "${it}Title$it"
+            )
+            noteDao.insert(note)
         }
 
-        noteDao.findNotesByUserId(userId, 20,0)
-                .subscribeOn(testScheduler)
-                .subscribe(testSubscriber)
-        noteDao.insert(note)
-        testScheduler.triggerActions()
+        noteDao.findNotesByTitle(userId, "%title%")
+                .test()
+                .assertValue { it.size == 6 }
+
+        noteDao.findNotesByTitle(userId, "%title1%")
+                .test()
+                .assertValue { it.size == 1 && it.first().id == 2L }
+
+        noteDao.findNotesByTitle(userId,"a")
+                .test()
+                .assertValue { it.isEmpty() }
     }
 }

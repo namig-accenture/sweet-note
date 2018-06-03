@@ -8,7 +8,8 @@ import app.ext.BaseViewModel
 import domain.model.NoteModel
 import domain.usecase.note.FetchUserNotesUseCase
 import domain.usecase.note.GetNotesCountUseCase
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.PublishSubject
 
 internal class HomeViewModel(private val fetchUserNotesUseCase: FetchUserNotesUseCase,
@@ -16,8 +17,11 @@ internal class HomeViewModel(private val fetchUserNotesUseCase: FetchUserNotesUs
     val refreshing by lazy { MutableLiveData<Boolean>().apply { value = false } }
     val listIsEmpty by lazy { MutableLiveData<Boolean>().apply { value = false } }
     val loadState: PublishSubject<NotesDataSource.LoadState> = PublishSubject.create<NotesDataSource.LoadState>()
-    fun fetchUserNotes(dispose: (Disposable) -> Unit): LiveData<PagedList<NoteModel>> {
-        val factory = NotesDataSourceFactory(fetchUserNotesUseCase, getNotesCountUseCase, dispose)
+    val disposables by lazy { CompositeDisposable() }
+    val userNotesObserver: LiveData<PagedList<NoteModel>> by lazy {
+        val factory = NotesDataSourceFactory(fetchUserNotesUseCase, getNotesCountUseCase) {
+            disposables += it
+        }
         factory.loadState.subscribe(loadState)
         val pagedListConfig = PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
@@ -25,11 +29,16 @@ internal class HomeViewModel(private val fetchUserNotesUseCase: FetchUserNotesUs
                 .setInitialLoadSizeHint(PAGE_SIZE)
                 .setPageSize(PAGE_SIZE)
                 .build()
-        return LivePagedListBuilder(factory, pagedListConfig).build()
+        LivePagedListBuilder(factory, pagedListConfig).build()
     }
 
     companion object {
         const val PAGE_SIZE = 10
         const val PREFETCH_DISTANCE = 5
+    }
+
+    override fun onCleared() {
+        disposables.clear()
+        super.onCleared()
     }
 }

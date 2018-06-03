@@ -30,8 +30,9 @@ import org.mockito.Mockito.`when` as on
 
 @RunWith(AndroidJUnit4::class)
 internal class HomeActivityTest : KoinTest {
-    @get:Rule
-    val activityTestRule = provideActivityTestRule<HomeActivity>(launchActivity = false)
+    @JvmField
+    @Rule
+    val rule = provideActivityTestRule<HomeActivity>(launchActivity = false)
     private val userRepository by inject<UserRepository>()
     private val context = InstrumentationRegistry.getTargetContext()
     private val user: UserModel by lazy { testModule { user.copy(id = ID, pin = PIN) } }
@@ -43,7 +44,7 @@ internal class HomeActivityTest : KoinTest {
 
     private inline fun launchActivity(mockBlock: () -> Unit = {}) {
         mockBlock()
-        activityTestRule.launchActivity(HomeActivity.getIntent(context))
+        rule.launchActivity(HomeActivity.getIntent(context))
     }
 
     @Test

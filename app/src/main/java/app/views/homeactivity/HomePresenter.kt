@@ -12,15 +12,13 @@ import io.reactivex.rxkotlin.subscribeBy
 
 internal class HomePresenter(private val homeActivity: HomeActivity) : BasePresenter() {
     private lateinit var disposables: CompositeDisposable
-    private lateinit var roomDisposable: CompositeDisposable
 
     private val viewModel by lazy { homeActivity.homeViewModel }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun createDisposables() {
         disposables = CompositeDisposable()
-        roomDisposable = CompositeDisposable()
-        viewModel.fetchUserNotes { roomDisposable += it }
+        viewModel.userNotesObserver
                 .observe(homeActivity, Observer(homeActivity::updateNoteList))
     }
 
@@ -35,11 +33,6 @@ internal class HomePresenter(private val homeActivity: HomeActivity) : BasePrese
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun clearDisposables() {
         disposables.clear()
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun onDestroy() {
-        roomDisposable.clear()
     }
 
     fun onAddButtonClicked(view: View) {

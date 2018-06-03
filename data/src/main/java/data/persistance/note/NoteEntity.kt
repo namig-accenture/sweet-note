@@ -2,12 +2,16 @@ package data.persistance.note
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
 import data.persistance.login.UserEntity
 import domain.model.NoteModel
 
 @Entity(
         tableName = "Notes",
+        indices = [
+            Index(value = ["userId"])
+        ],
         foreignKeys = [
             ForeignKey(
                     entity = UserEntity::class,

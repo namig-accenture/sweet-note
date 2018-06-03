@@ -24,4 +24,7 @@ interface NoteDao {
 
     @Query("SELECT COUNT(*) FROM Notes WHERE userId=:userId")
     fun findNotesCountByUserId(userId: Long): Single<Int>
+
+    @Query("SELECT * FROM Notes WHERE userId=:userId AND title LIKE :title")
+    fun findNotesByTitle(userId: Long, title: String): Flowable<List<NoteEntity>>
 }

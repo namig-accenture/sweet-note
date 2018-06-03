@@ -8,11 +8,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.MainThread
 import android.support.v4.app.DialogFragment
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import app.ext.BaseActivity
 import app.extensions.plusAssign
 import app.parcelables.ShowDialogArgumentModel
 import app.views.addeditnotedialog.AddEditNoteDialog
+import app.views.searchdialog.SearchDialog
 import app.views.shownote.ShowNoteDialog
 import com.example.namigtahmazli.sweetnote.R
 import com.example.namigtahmazli.sweetnote.databinding.ActivityHomeBinding
@@ -40,7 +43,31 @@ internal class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setSupportActionBar(dataBinding.toolbar)
         notesPagedListAdapter.itemClickObserver.observe(this, Observer(::handleListItemClick))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_home_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        item?.apply {
+            when (itemId) {
+                R.id.menu_search -> {
+                    openSearchDialog()
+                    return true
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun openSearchDialog() {
+        addDialogFragment(block = {
+            SearchDialog.getInstance()
+        })
     }
 
     private fun handleListItemClick(note: NoteModel?) {
@@ -57,17 +84,17 @@ internal class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         when (loadState) {
             NotesDataSource.LoadState.Error -> {
                 showMessage(message = "Could not load notes.")
-                homeViewModel.refreshing.value = false
+                homeViewModel.refreshing.postValue(false)
             }
-            NotesDataSource.LoadState.Loading -> homeViewModel.refreshing.value = true
+            NotesDataSource.LoadState.Loading -> homeViewModel.refreshing.postValue(true)
             NotesDataSource.LoadState.Loaded -> {
-                homeViewModel.refreshing.value = false
-                homeViewModel.listIsEmpty.value = false
+                homeViewModel.refreshing.postValue(false)
+                homeViewModel.listIsEmpty.postValue(false)
             }
             NotesDataSource.LoadState.Empty -> {
                 Timber.d("No notes found")
-                homeViewModel.listIsEmpty.value = true
-                homeViewModel.refreshing.value = false
+                homeViewModel.listIsEmpty.postValue(true)
+                homeViewModel.refreshing.postValue(false)
             }
         }
     }

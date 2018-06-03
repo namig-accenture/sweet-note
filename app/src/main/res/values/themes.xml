@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="textColorError">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -17,6 +18,13 @@
     <style name="AppTheme.NoActionBar.Launcher">
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.White">
+        <item name="android:colorPrimary">@color/colorPrimaryLight</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDarkLight</item>
+        <item name="android:colorAccent">@color/colorAccentLight</item>
+        <item name="android:toolbarStyle">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
 </resources>
