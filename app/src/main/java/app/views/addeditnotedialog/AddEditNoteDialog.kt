@@ -5,9 +5,9 @@ import android.arch.lifecycle.Lifecycle
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.support.annotation.MainThread
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.ColorUtils
+import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +38,16 @@ internal class AddEditNoteDialog : BaseDialogFragment<DialogAddEditNoteBinding>(
         lifecycle += addEditNoteDialogPresenter
     }
 
+    override fun onBackPressed() {
+        this.dismiss()
+    }
+
+    override fun dismiss() {
+        dismissAnimating {
+            super.dismiss()
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return super.onCreateView(inflater, container, savedInstanceState).apply {
             dataBinding.apply {
@@ -56,7 +66,7 @@ internal class AddEditNoteDialog : BaseDialogFragment<DialogAddEditNoteBinding>(
                             duration = ANIMATION_DURATION
                             start()
                         }
-                        (dataBinding.toolbar.navigationIcon as AnimatedVectorDrawableCompat).start()
+                        animateBackButtonIcon(isOpening = true)
                     }
                 }
             }
@@ -65,6 +75,10 @@ internal class AddEditNoteDialog : BaseDialogFragment<DialogAddEditNoteBinding>(
 
     @MainThread
     fun handleBackButtonClick(@Suppress("UNUSED_PARAMETER") view: View?) {
+        dismiss()
+    }
+
+    private fun dismissAnimating(onAnimationEnd: () -> Unit) {
         context?.let { context ->
             arguments?.let {
                 val width = it.getInt(FAB_DIAMETHER)
@@ -79,19 +93,30 @@ internal class AddEditNoteDialog : BaseDialogFragment<DialogAddEditNoteBinding>(
                                 setBackgroundColor(ColorUtils.setAlphaComponent(color, it))
                             })
                             duration = ANIMATION_DURATION
-                            onAnimationEnd { this@AddEditNoteDialog.dismiss() }
+                            onAnimationEnd { onAnimationEnd() }
                             start()
                         }
                     }
-                    toolbar.apply {
-                        navigationIcon = (context.getDrawable(R.drawable.animated_back_to_menu_icon)
-                                as AnimatedVectorDrawable).apply {
-                            start()
-                        }
+                    animateBackButtonIcon(isOpening = false) {
                         title = getString(R.string.register)
                     }
                 }
             }
+        }
+    }
+
+    private inline fun animateBackButtonIcon(isOpening: Boolean, doOnToolbar: Toolbar.() -> Unit = {}) {
+        val icon = if (isOpening) {
+            R.drawable.animated_menu_to_back_icon
+        } else {
+            R.drawable.animated_back_to_menu_icon
+        }
+
+        dataBinding.toolbar.apply {
+            navigationIcon = (context.getDrawable(icon) as AnimatedVectorDrawable).apply {
+                start()
+            }
+            doOnToolbar()
         }
     }
 

@@ -1,5 +1,6 @@
 package app.ext
 
+import android.app.Dialog
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleOwner
 import android.databinding.DataBindingUtil
@@ -28,10 +29,20 @@ internal abstract class BaseDialogFragment<DB : ViewDataBinding> : AppCompatDial
         addLifecycleObservers(lifecycle)
     }
 
+    open fun onBackPressed() {}
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dataBinding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
         bindVariables(dataBinding)
         return dataBinding.root
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return object : Dialog(activity, theme) {
+            override fun onBackPressed() {
+                this@BaseDialogFragment.onBackPressed()
+            }
+        }
     }
 
     fun showMessage(@StringRes messageId: Int? = null,

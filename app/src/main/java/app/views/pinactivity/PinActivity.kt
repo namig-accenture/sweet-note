@@ -3,9 +3,11 @@ package app.views.pinactivity
 import android.arch.lifecycle.Lifecycle
 import android.content.Context
 import android.content.Intent
+import android.view.inputmethod.InputMethodManager
 import app.ext.BaseActivity
 import app.ext.log
 import app.extensions.plusAssign
+import app.extensions.systemService
 import app.parcelables.PinActivityIntentModel
 import app.views.homeactivity.HomeActivity
 import com.example.namigtahmazli.sweetnote.R
@@ -49,12 +51,12 @@ internal class PinActivity : BaseActivity<ActivityPinBinding>() {
             runOnUiThread {
                 dataBinding.pin.animateOnInValidPin()
             }
-        }else{
+        } else {
             navigateToHome()
         }
     }
 
-    private fun navigateToHome(){
+    private fun navigateToHome() {
         startActivity(HomeActivity.getIntent(this))
         finish()
     }

@@ -18,11 +18,11 @@ internal class SearchViewModel(private val queryNotesByTitleUseCase: QueryNotesB
     inline fun observeQueryResults(crossinline onNext: (List<NoteModel>) -> Unit,
                                    crossinline onError: (Throwable) -> Unit): Disposable {
         return queryTextObserver
+                .map(CharSequence::toString)
+                .doOnNext(lastQuery::postValue)
                 .filter(CharSequence::isNotEmpty)
                 .debounce(TYPE_SPEED_LIMIT, TIME_UNIT)
-                .map(CharSequence::toString)
                 .distinctUntilChanged()
-                .doOnNext(lastQuery::postValue)
                 .flatMap(::queryByTitle)
                 .subscribeBy(
                         onNext = { onNext(it) },

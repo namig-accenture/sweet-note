@@ -5,22 +5,19 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.BottomSheetDialog
-import android.support.design.widget.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
-import android.widget.FrameLayout
 import android.widget.Toast
 import app.customview.DrawableClickableTextView
+import app.ext.BaseBottomSheetDialogFragment
 import app.extensions.systemService
 import app.parcelables.ShowDialogArgumentModel
 import com.example.namigtahmazli.sweetnote.databinding.DialogShowNoteBinding
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
 
-internal class ShowNoteDialog : BottomSheetDialogFragment() {
+internal class ShowNoteDialog : BaseBottomSheetDialogFragment() {
     private val showNoteViewModel by viewModel<ShowNoteViewModel>()
     private val showNoteDialogPresenter by inject<ShowNoteDialogPresenter> { mapOf(DIALOG to this) }
     private lateinit var dataBinding: DialogShowNoteBinding
@@ -32,18 +29,12 @@ internal class ShowNoteDialog : BottomSheetDialogFragment() {
         return dataBinding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        view.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                view.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                val dialog = dialog as BottomSheetDialog
-                val bottomSheet = dialog.findViewById<FrameLayout>(android.support.design.R.id.design_bottom_sheet)
-                val behavior = BottomSheetBehavior.from(bottomSheet)
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.peekHeight = 0
+    override fun onStateChanged(state: Int) {
+        when (state) {
+            BottomSheetBehavior.STATE_COLLAPSED, BottomSheetBehavior.STATE_HIDDEN -> {
+                this.dismiss()
             }
-        })
+        }
     }
 
     override fun onAttach(context: Context?) {
@@ -66,6 +57,12 @@ internal class ShowNoteDialog : BottomSheetDialogFragment() {
                 primaryClip = ClipData.newPlainText("Copied to Clipboard", showNoteViewModel.note.value?.password)
                 Toast.makeText(context, "Copied to Clipboard", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    fun handleTitleDrawableClick(drawablePosition: DrawableClickableTextView.DrawablePosition) {
+        if (drawablePosition == DrawableClickableTextView.DrawablePosition.Right) {
+
         }
     }
 

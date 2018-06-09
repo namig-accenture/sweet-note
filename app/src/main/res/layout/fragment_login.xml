@@ -31,6 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textEmailAddress"
+                android:nextFocusForward="@+id/et_password"
+                android:nextFocusDown="@+id/et_password"
                 android:onTextChanged="@{presenter::onEtEmailChanged}" />
         </android.support.design.widget.TextInputLayout>
 
@@ -48,6 +50,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textPassword"
+                android:nextFocusForward="@+id/btn_login"
+                android:nextFocusDown="@+id/btn_login"
                 android:onTextChanged="@{presenter::onEtPasswordChanged}" />
         </android.support.design.widget.TextInputLayout>
 

@@ -6,11 +6,14 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.support.design.widget.TextInputEditText
 import android.support.v4.content.ContextCompat
 import android.text.InputFilter
 import android.text.InputType
 import android.util.AttributeSet
+import android.view.inputmethod.InputMethodManager
+import app.extensions.systemService
 import app.extensions.use
 import com.example.namigtahmazli.sweetnote.R
 
@@ -123,7 +126,12 @@ internal class PinEditText : TextInputEditText {
     }
 
     fun animateOnInValidPin() {
-        val objectAnimator = ObjectAnimator.ofFloat(this, "translationX", 0f, 25f, -25f, 25f, -25f, 15f, -15f, 6f, -6f, 0f)
+        if (Build.VERSION.SDK_INT in Build.VERSION_CODES.LOLLIPOP..Build.VERSION_CODES.LOLLIPOP_MR1) {
+            context.systemService<InputMethodManager>(Context.INPUT_METHOD_SERVICE)
+                    .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+        }
+        val objectAnimator = ObjectAnimator.ofFloat(this, "translationX",
+                0f, 25f, -25f, 25f, -25f, 15f, -15f, 6f, -6f, 0f)
         objectAnimator.duration = 1000L
         objectAnimator.start()
     }
