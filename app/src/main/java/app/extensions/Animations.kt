@@ -8,39 +8,13 @@ import android.view.View
 import android.view.ViewAnimationUtils
 import kotlin.math.sqrt
 
-inline fun View.animateOn(crossinline doAnimation: View.() -> Unit) {
+inline fun View.afterLayoutChanged(crossinline doAnimation: View.() -> Unit) {
     addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
         override fun onLayoutChange(v: View, left: Int, top: Int, right: Int, bottom: Int, oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
             v.removeOnLayoutChangeListener(this)
             doAnimation()
         }
     })
-}
-
-fun View.circularRevealOpen(startX: Int, startY: Int, duration: Long = 0L): Animator {
-    val radius = sqrt((width * width + height * height).toFloat())
-    return ViewAnimationUtils.createCircularReveal(this, startX, startY, 0f, radius).apply {
-        interpolator = FastOutSlowInInterpolator()
-        this.duration = duration
-    }
-}
-
-fun View.circularRevealClose(endX: Int, endY: Int, endRadius: Float, duration: Long = 0L): Animator {
-    val radius = Math.hypot(width.toDouble(), height.toDouble())
-    return ViewAnimationUtils.createCircularReveal(this, endX, endY, radius.toFloat(), endRadius).apply {
-        interpolator = FastOutSlowInInterpolator()
-        this.duration = duration
-    }
-}
-
-inline fun valueAnimation(startValue: Int, endValue: Int, duration: Long = 0L,
-                          crossinline onValueChanged: (Int) -> Unit): Animator {
-    return ValueAnimator.ofInt(startValue, endValue).apply {
-        addUpdateListener {
-            onValueChanged(it.animatedValue as Int)
-        }
-        setDuration(duration)
-    }
 }
 
 operator fun AnimatorSet.plus(animator: Animator): AnimatorSet {

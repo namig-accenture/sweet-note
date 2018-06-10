@@ -109,8 +109,8 @@ internal class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             AddEditNoteDialog().apply {
                 setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_NoActionBar)
                 arguments = Bundle().apply {
-                    putInt(AddEditNoteDialog.REVEAL_START_X, view.run { right - (width) / 2 })
-                    putInt(AddEditNoteDialog.REVEAL_START_Y, view.run { bottom - (height) / 2 })
+                    putInt(AddEditNoteDialog.PADDING_RIGHT, view.paddingRight)
+                    putInt(AddEditNoteDialog.PADDING_BOTTOM, view.paddingBottom)
                     putInt(AddEditNoteDialog.FAB_DIAMETHER, view.width)
                 }
             }

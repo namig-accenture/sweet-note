@@ -1,19 +1,24 @@
 package app.views.addeditnotedialog
 
 import android.animation.AnimatorSet
+import android.animation.ValueAnimator
 import android.arch.lifecycle.Lifecycle
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.support.annotation.MainThread
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.ColorUtils
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import app.ext.BaseDialogFragment
 import app.ext.log
-import app.extensions.*
+import app.extensions.afterLayoutChanged
+import app.extensions.onAnimationEnd
+import app.extensions.plusAssign
 import com.example.namigtahmazli.sweetnote.R
 import com.example.namigtahmazli.sweetnote.databinding.DialogAddEditNoteBinding
 import org.koin.android.architecture.ext.viewModel
@@ -43,32 +48,15 @@ internal class AddEditNoteDialog : BaseDialogFragment<DialogAddEditNoteBinding>(
     }
 
     override fun dismiss() {
-        dismissAnimating {
+        animate(false) {
             super.dismiss()
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return super.onCreateView(inflater, container, savedInstanceState).apply {
-            dataBinding.apply {
-                val context = root.context
-                addNoteMainContainer.apply {
-                    animateOn {
-                        AnimatorSet().apply {
-                            this += circularRevealOpen(
-                                    arguments?.getInt(REVEAL_START_X) ?: 0,
-                                    arguments?.getInt(REVEAL_START_Y) ?: 0
-                            )
-                            this += valueAnimation(255, 0, onValueChanged = {
-                                val color = ContextCompat.getColor(context, R.color.colorAccent)
-                                setBackgroundColor(ColorUtils.setAlphaComponent(color, it))
-                            })
-                            duration = ANIMATION_DURATION
-                            start()
-                        }
-                        animateBackButtonIcon(isOpening = true)
-                    }
-                }
+            this?.afterLayoutChanged {
+                animate(true)
             }
         }
     }
@@ -78,28 +66,38 @@ internal class AddEditNoteDialog : BaseDialogFragment<DialogAddEditNoteBinding>(
         dismiss()
     }
 
-    private fun dismissAnimating(onAnimationEnd: () -> Unit) {
-        context?.let { context ->
-            arguments?.let {
-                val width = it.getInt(FAB_DIAMETHER)
-                val x = it.getInt(REVEAL_START_X)
-                val y = it.getInt(REVEAL_START_Y)
-                dataBinding.apply {
-                    addNoteMainContainer.apply {
-                        AnimatorSet().apply {
-                            this += circularRevealClose(x, y - width, width * .5f)
-                            this += valueAnimation(0, 255, onValueChanged = {
-                                val color = ContextCompat.getColor(context, R.color.colorAccent)
-                                setBackgroundColor(ColorUtils.setAlphaComponent(color, it))
-                            })
-                            duration = ANIMATION_DURATION
-                            onAnimationEnd { onAnimationEnd() }
-                            start()
+    private fun animate(isEntering: Boolean, onAnimationEnd: () -> Unit = {}) {
+        animateBackButtonIcon(isOpening = isEntering) {
+            if (!isEntering) {
+                title = getString(R.string.register)
+            }
+        }
+        dataBinding.apply {
+            addNoteMainContainer.apply view@{
+                val width = measuredWidth
+                val height = measuredHeight
+                val diamether = arguments?.getInt(FAB_DIAMETHER) ?: return
+                val rightPadding = arguments?.getInt(PADDING_RIGHT) ?: return
+                val bottomPadding = arguments?.getInt(PADDING_BOTTOM) ?: return
+                val centerX = width - rightPadding - diamether / 2
+                val centerY = height - bottomPadding - diamether / 2
+                val startAlpha = if (isEntering) 255 else 0
+                val endAlpha = if (isEntering) 0 else 255
+                val startRadius = if (isEntering) diamether / 2.0 else Math.hypot(width.toDouble(), height.toDouble())
+                val endRadius = if (isEntering) Math.hypot(width.toDouble(), height.toDouble()) else diamether * .5
+                AnimatorSet().apply {
+                    this += ViewAnimationUtils.createCircularReveal(this@view,
+                            centerX, centerY, startRadius.toFloat(), endRadius.toFloat())
+                    this += ValueAnimator.ofInt(startAlpha, endAlpha).apply {
+                        val color = ContextCompat.getColor(context, R.color.colorAccent)
+                        addUpdateListener {
+                            setBackgroundColor(ColorUtils.setAlphaComponent(color, it.animatedValue as Int))
                         }
                     }
-                    animateBackButtonIcon(isOpening = false) {
-                        title = getString(R.string.register)
-                    }
+                    duration = ANIMATION_DURATION
+                    interpolator = FastOutSlowInInterpolator()
+                    onAnimationEnd { onAnimationEnd() }
+                    start()
                 }
             }
         }
@@ -155,9 +153,9 @@ internal class AddEditNoteDialog : BaseDialogFragment<DialogAddEditNoteBinding>(
 
     companion object {
         const val DIALOG = "AddEditNoteDialog"
-        const val REVEAL_START_X = "x"
-        const val REVEAL_START_Y = "y"
         const val FAB_DIAMETHER = "width"
+        const val PADDING_BOTTOM = "paddingBottom"
+        const val PADDING_RIGHT = "paddingRight"
         const val ANIMATION_DURATION = 500L
     }
 }
