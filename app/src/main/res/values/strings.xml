@@ -46,4 +46,5 @@
     <string name="search_dialog_back_button_content_description">Clicking back button will take user to Home Activity</string>
 
     <string name="show_dialog_edit_button_text">Edit</string>
+    <string name="show_dialog_delete_button_text">Delete</string>
 </resources>

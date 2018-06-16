@@ -3,10 +3,7 @@ package domain
 import domain.transformers.AndroidSchedulerTransformer
 import domain.transformers.SchedulerTransformer
 import domain.usecase.login.*
-import domain.usecase.note.AddNoteUseCase
-import domain.usecase.note.FetchUserNotesUseCase
-import domain.usecase.note.GetNotesCountUseCase
-import domain.usecase.note.QueryNotesByTitleUseCase
+import domain.usecase.note.*
 import org.koin.dsl.module.applicationContext
 
 val general = applicationContext {
@@ -25,6 +22,8 @@ val useCase = applicationContext {
     factory { AddNoteUseCase(get(), get()) }
     factory { GetNotesCountUseCase(get(), get()) }
     factory { QueryNotesByTitleUseCase(get(), get()) }
+    factory { EditNoteUseCase(get()) }
+    factory { DeleteNoteUseCase(get()) }
 }
 
 val domainModule = listOf(general, useCase)

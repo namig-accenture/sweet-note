@@ -27,7 +27,7 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 app:navigationContentDescription="@string/add_edit_note_dialog_home_button_content_description"
-                app:navigationIcon="@drawable/animated_menu_to_back_icon"
+                app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
                 app:navigationOnClickListener="@{presenter.backNavigationClick}"
                 app:title="Add Note"
                 tools:title="Add Note" />

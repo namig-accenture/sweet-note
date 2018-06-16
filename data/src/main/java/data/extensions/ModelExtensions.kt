@@ -8,6 +8,7 @@ import domain.model.UserModel
 val UserModel.asEntity get() = UserEntity(email = this.email, password = this.password)
 val NoteModel.asEntity
     get() = NoteEntity(
+            id = this.id,
             userId = this.userId,
             userName = this.userName,
             password = this.password,

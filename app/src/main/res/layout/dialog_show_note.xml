@@ -14,68 +14,70 @@
             type="app.views.shownote.ShowNoteDialogPresenter" />
     </data>
 
-    <android.support.v7.widget.CardView
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_medium"
-        android:minHeight="256dp">
+        android:layout_height="match_parent"
+        android:background="@color/backgroundColor">
 
-        <android.support.constraint.ConstraintLayout
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_medium">
+            android:layout_height="wrap_content">
 
-            <app.customview.DrawableClickableTextView
-                android:id="@+id/tv_title"
-                style="@style/TextAppearance.AppCompat.Subhead"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_edit_black_24dp"
-                android:drawablePadding="@dimen/spacing_large"
-                android:fontFamily="@font/aclonica"
-                android:text="@{viewModel.note.title}"
-                android:textColor="?android:attr/textColorSecondary"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:onDrawableTouchListener="@{presenter.onTitleDrawableClicked}"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="16dp"
-                tools:text="Facebook Profile" />
-
-            <app.customview.DrawableClickableTextView
-                android:id="@+id/tv_username"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:drawableEnd="@drawable/ic_content_copy_black_24dp"
-                android:drawablePadding="@dimen/spacing_large"
-                android:fontFamily="serif-monospace"
-                android:text="@{viewModel.note.userName}"
-                app:layout_constraintLeft_toLeftOf="@+id/tv_title"
-                app:layout_constraintTop_toBottomOf="@+id/tv_title"
-                app:onDrawableTouchListener="@{presenter.onUsernameDrawableClicked}"
-                tools:layout_editor_absoluteX="16dp"
-                tools:text="demo@demo.comasasdasasdasd\nasdasdasd\nasdasdasd" />
+                android:background="@color/colorPrimaryLight"
+                android:minHeight="?android:attr/actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Light"
+                app:menu="@{viewModel.menuRes}"
+                app:onMenuItemClickListener="@{presenter.onMenuItemClickListener}"
+                app:title="@{viewModel.note.title}"
+                tools:title="Facebook Password" />
+        </android.support.design.widget.AppBarLayout>
 
-            <app.customview.DrawableClickableTextView
-                android:id="@+id/tv_password"
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:drawableEnd="@drawable/ic_content_copy_black_24dp"
-                android:drawablePadding="@dimen/spacing_large"
-                android:fontFamily="serif-monospace"
-                android:text="@{viewModel.note.password}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="@+id/tv_title"
-                app:layout_constraintTop_toBottomOf="@+id/tv_username"
-                app:onDrawableTouchListener="@{presenter.onPasswordDrawableClicked}"
-                tools:layout_editor_absoluteX="16dp"
-                tools:text="abcdAbcd123@#$\ndemo@demo.comasasdasasdasd\nasdasdasd\nasdasdasd" />
+                android:padding="@dimen/spacing_medium">
 
-        </android.support.constraint.ConstraintLayout>
+                <app.customview.DrawableClickableTextView
+                    android:id="@+id/tv_username"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_content_copy_black_24dp"
+                    android:drawablePadding="@dimen/spacing_large"
+                    android:fontFamily="serif-monospace"
+                    android:text="@{viewModel.note.userName}"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:onDrawableTouchListener="@{presenter.onUsernameDrawableClicked}"
+                    tools:text="demo@demo.comasasdasasdasd\nasdasdasd\nasdasdasd" />
 
-    </android.support.v7.widget.CardView>
+                <app.customview.DrawableClickableTextView
+                    android:id="@+id/tv_password"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:drawableEnd="@drawable/ic_content_copy_black_24dp"
+                    android:drawablePadding="@dimen/spacing_large"
+                    android:fontFamily="serif-monospace"
+                    android:text="@{viewModel.note.password}"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_username"
+                    app:onDrawableTouchListener="@{presenter.onPasswordDrawableClicked}"
+                    tools:text="abcdAbcd123@#$\ndemo@demo.comasasdasasdasd\nasdasdasd\nasdasdasd" />
+            </android.support.constraint.ConstraintLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

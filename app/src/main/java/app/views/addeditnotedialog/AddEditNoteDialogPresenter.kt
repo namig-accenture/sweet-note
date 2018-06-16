@@ -46,11 +46,17 @@ internal class AddEditNoteDialogPresenter(private val dialog: AddEditNoteDialog)
     }
 
     fun onSaveButtonClicked(view: View) {
-        disposables += viewModel.addNote()
-                .subscribeBy(
-                        onSuccess = { dialog.handleAddingNoteResult() },
-                        onError = dialog::handleAddingNoteError
+        disposables += viewModel.run {
+            return@run note.value?.let {
+                editNote().subscribeBy(
+                        onSuccess = dialog::handleEditingNoteResult,
+                        onError = dialog::handleEditingNoteError
                 )
+            } ?: addNote().subscribeBy(
+                    onSuccess = dialog::handleAddingNoteResult,
+                    onError = dialog::handleAddingNoteError
+            )
+        }
     }
 
     fun onTitleTextChanged(title: CharSequence?, start: Int, before: Int, count: Int) {

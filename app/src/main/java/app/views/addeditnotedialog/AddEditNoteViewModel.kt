@@ -5,40 +5,63 @@ import app.ext.BaseViewModel
 import domain.exceptions.FieldNotDefinedException
 import domain.model.NoteModel
 import domain.usecase.note.AddNoteUseCase
+import domain.usecase.note.EditNoteUseCase
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
 
-internal class AddEditNoteViewModel(private val addNoteUseCase: AddNoteUseCase) : BaseViewModel() {
+internal class AddEditNoteViewModel(private val addNoteUseCase: AddNoteUseCase,
+                                    private val editNoteUseCase: EditNoteUseCase) : BaseViewModel() {
     val titleTextObserver: PublishSubject<CharSequence> = PublishSubject.create()
     val usernameTextObserver: PublishSubject<CharSequence> = PublishSubject.create()
     val passwordTextObserver: PublishSubject<CharSequence> = PublishSubject.create()
 
-    val title: MutableLiveData<String> = MutableLiveData()
-    val username: MutableLiveData<String> = MutableLiveData()
-    val password: MutableLiveData<String> = MutableLiveData()
-    val titleError: MutableLiveData<String> = MutableLiveData()
-    val usernameError: MutableLiveData<String> = MutableLiveData()
-    val passwordError: MutableLiveData<String> = MutableLiveData()
-    val saveButtonEnabled: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply {
+    val note = MutableLiveData<NoteModel>()
+    val title = MutableLiveData<String>()
+    val username = MutableLiveData<String>()
+    val password = MutableLiveData<String>()
+    val titleError = MutableLiveData<String>()
+    val usernameError = MutableLiveData<String>()
+    val passwordError = MutableLiveData<String>()
+    val saveButtonEnabled = MutableLiveData<Boolean>().apply {
         if (value == null) {
             postValue(false)
         }
     }
 
     fun addNote(): Single<NoteModel> {
-        return password.value?.let { password ->
+        return validateFields()
+                .flatMap {
+                    addNoteUseCase.get(it)
+                }
+    }
+
+    fun editNote(): Single<Int> {
+        return validateFields()
+                .flatMap {
+                    editNoteUseCase.get(it)
+                }
+    }
+
+    private fun validateFields(): Single<NoteModel> = Single.create { emitter ->
+        password.value?.let { password ->
             username.value?.let { username ->
                 title.value?.let { title ->
-                    addNoteUseCase.get(NoteModel(
-                            userName = username,
-                            password = password,
-                            title = title
-                    ))
-                } ?: Single.error(FieldNotDefinedException(name = "title"))
-            } ?: Single.error(FieldNotDefinedException(name = "username"))
-        } ?: Single.error(FieldNotDefinedException(name = "password"))
+                    emitter.onSuccess(
+                            note.value?.copy(
+                                    userName = username,
+                                    password = password,
+                                    title = title
+                            ) ?: NoteModel(
+                                    userName = username,
+                                    password = password,
+                                    title = title
+                            )
+                    )
+                } ?: emitter.onError(FieldNotDefinedException(name = "title"))
+            } ?: emitter.onError(FieldNotDefinedException(name = "username"))
+        } ?: emitter.onError(FieldNotDefinedException(name = "password"))
     }
 
     inline fun observeTitleTextChanges(crossinline onNext: (Boolean) -> Unit,

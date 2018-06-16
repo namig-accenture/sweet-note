@@ -30,4 +30,15 @@
         <item name="android:background">?android:attr/colorPrimary</item>
         <item name="android:theme">@style/AppBarTheme</item>
     </style>
+
+    <style name="SecondaryToolbarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@color/colorPrimaryLight</item>
+        <item name="titleTextAppearance">@style/SecondaryToolbarTitle</item>
+    </style>
+
+    <style name="SecondaryToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
 </resources>

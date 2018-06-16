@@ -10,15 +10,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import app.customview.DrawableClickableTextView
+import app.ext.BaseActivity
 import app.ext.BaseBottomSheetDialogFragment
+import app.ext.log
 import app.extensions.systemService
+import app.parcelables.AddEditDialogArgumentModel
 import app.parcelables.ShowDialogArgumentModel
+import app.views.addeditnotedialog.AddEditNoteDialog
 import com.example.namigtahmazli.sweetnote.databinding.DialogShowNoteBinding
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
 
 internal class ShowNoteDialog : BaseBottomSheetDialogFragment() {
-    private val showNoteViewModel by viewModel<ShowNoteViewModel>()
+    val showNoteViewModel by viewModel<ShowNoteViewModel>()
     private val showNoteDialogPresenter by inject<ShowNoteDialogPresenter> { mapOf(DIALOG to this) }
     private lateinit var dataBinding: DialogShowNoteBinding
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -60,10 +64,29 @@ internal class ShowNoteDialog : BaseBottomSheetDialogFragment() {
         }
     }
 
-    fun handleTitleDrawableClick(drawablePosition: DrawableClickableTextView.DrawablePosition) {
-        if (drawablePosition == DrawableClickableTextView.DrawablePosition.Right) {
+    fun handleEdit() {
+        (activity as BaseActivity<*>).addDialogFragment(block = {
+            AddEditNoteDialog.instance.apply {
+                arguments = Bundle().apply {
+                    putParcelable(AddEditNoteDialog.NOTE, AddEditDialogArgumentModel(showNoteViewModel.note.value))
+                }
+            }
+        })
+        dismiss()
+    }
 
+    fun handleDeletingNote(removedNoteCount: Int) {
+        if (removedNoteCount == 1) {
+            (activity as BaseActivity<*>).showMessage(message = "Removed Successfuly")
+            dialog.dismiss()
+        } else {
+            (activity as BaseActivity<*>).showMessage(message = "Could not delete. Please try again.")
         }
+    }
+
+    fun handleDeletingNoteError(throwable: Throwable) {
+        throwable.log<ShowNoteDialogPresenter>("while deleting note.")
+        (activity as BaseActivity<*>).showMessage(message = "Could not delete. Please try again.")
     }
 
     companion object {

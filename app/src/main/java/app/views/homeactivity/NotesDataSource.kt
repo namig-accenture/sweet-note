@@ -9,6 +9,7 @@ import domain.usecase.note.GetNotesCountUseCase
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
+import java.lang.Exception
 
 internal class NotesDataSource(private val fetchUserNotesUseCase: FetchUserNotesUseCase,
                                private val getNotesCountUseCase: GetNotesCountUseCase,
@@ -17,11 +18,11 @@ internal class NotesDataSource(private val fetchUserNotesUseCase: FetchUserNotes
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<NoteModel>) {
         loadData(InitialState.Range, FetchNotesRequestModel(params.loadSize, params.startPosition)) {
-            callback.onResult(it)
+            callback.setResult(it)
         }
     }
 
-    private inline fun getNotesCount(crossinline onNext: (Int) -> Unit) {
+    private fun getNotesCount(onNext: (Int) -> Unit) {
         dispose {
             getNotesCountUseCase.get()
                     .subscribeBy(
@@ -36,8 +37,28 @@ internal class NotesDataSource(private val fetchUserNotesUseCase: FetchUserNotes
             val position = computeInitialLoadPosition(params, count)
             val size = computeInitialLoadSize(params, position, count)
             loadData(InitialState.Initial, FetchNotesRequestModel(size, position)) {
-                callback.onResult(it, position, count)
+                if (it.size == size) {
+                    callback.setResult(it, position, count)
+                } else {
+                    invalidate()
+                }
             }
+        }
+    }
+
+    private fun LoadInitialCallback<NoteModel>.setResult(list: List<NoteModel>, position: Int, count: Int) {
+        try {
+            onResult(list, position, count)
+        } catch (ex: Exception) {
+            invalidate()
+        }
+    }
+
+    private fun LoadRangeCallback<NoteModel>.setResult(list: List<NoteModel>) {
+        try {
+            onResult(list)
+        } catch (ex: Exception) {
+            invalidate()
         }
     }
 
@@ -60,12 +81,8 @@ internal class NotesDataSource(private val fetchUserNotesUseCase: FetchUserNotes
                                 loadState.onNext(value)
                             },
                             onError = {
-                                if (it is IllegalStateException) {
-                                    invalidate()
-                                } else {
-                                    it.log<NotesDataSource>("While loading notes.")
-                                    loadState.onNext(LoadState.Error)
-                                }
+                                it.log<NotesDataSource>("While loading notes.")
+                                loadState.onNext(LoadState.Error)
                             }
                     )
         }

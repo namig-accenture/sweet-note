@@ -1,5 +1,7 @@
 package app.ext
 
+import android.app.Dialog
+import android.graphics.Point
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
@@ -36,14 +38,25 @@ internal abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragmen
 
     override fun onStart() {
         super.onStart()
-        bottomSheetBehavior?.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                onSlideOffsetChanged(slideOffset)
+        bottomSheetBehavior?.apply {
+            state = BottomSheetBehavior.STATE_COLLAPSED
+            val size = Point().apply {
+                activity?.windowManager?.defaultDisplay?.getSize(this)
             }
+            peekHeight = size.y
+            setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    onSlideOffsetChanged(slideOffset)
+                }
 
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                onStateChanged(state = newState)
-            }
-        })
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    onStateChanged(state = newState)
+                }
+            })
+        }
+    }
+
+    override fun setupDialog(dialog: Dialog?, style: Int) {
+
     }
 }

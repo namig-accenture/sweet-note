@@ -7,10 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.MainThread
-import android.support.v4.app.DialogFragment
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import app.ext.BaseActivity
 import app.extensions.plusAssign
 import app.parcelables.ShowDialogArgumentModel
@@ -43,28 +39,10 @@ internal class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSupportActionBar(dataBinding.toolbar)
         notesPagedListAdapter.itemClickObserver.observe(this, Observer(::handleListItemClick))
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.activity_home_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.apply {
-            when (itemId) {
-                R.id.menu_search -> {
-                    openSearchDialog()
-                    return true
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun openSearchDialog() {
+    fun openSearchDialog() {
         addDialogFragment(block = {
             SearchDialog.getInstance()
         })
@@ -104,17 +82,8 @@ internal class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     }
 
     @MainThread
-    fun openAddEditDialog(view: View) {
-        addDialogFragment(block = {
-            AddEditNoteDialog().apply {
-                setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_NoActionBar)
-                arguments = Bundle().apply {
-                    putInt(AddEditNoteDialog.PADDING_RIGHT, view.paddingRight)
-                    putInt(AddEditNoteDialog.PADDING_BOTTOM, view.paddingBottom)
-                    putInt(AddEditNoteDialog.FAB_DIAMETHER, view.width)
-                }
-            }
-        })
+    fun openAddEditDialog() {
+        addDialogFragment(block = { AddEditNoteDialog.instance })
     }
 
     companion object {

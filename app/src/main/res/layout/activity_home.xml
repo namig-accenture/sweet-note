@@ -27,7 +27,9 @@
                 android:id="@+id/toolbar"
                 style="@style/ToolBarStyle"
                 app:navigationIcon="@drawable/animated_menu_to_back_icon"
-                app:title="@string/register" />
+                app:title="@string/register"
+                app:menu="@{viewModel.menuRes}"
+                app:onMenuItemClickListener="@{presenter.onMenuItemClickListener}"/>
         </android.support.design.widget.AppBarLayout>
 
         <include

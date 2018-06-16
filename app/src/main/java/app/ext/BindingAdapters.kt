@@ -1,9 +1,11 @@
 package app.ext
 
 import android.databinding.BindingAdapter
+import android.support.annotation.MenuRes
 import android.support.design.widget.TextInputLayout
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.SearchView
+import android.support.v7.widget.Toolbar
 import android.view.View
 import app.customview.PinEditText
 
@@ -30,4 +32,9 @@ internal fun setRefreshing(swipeRefreshLayout: SwipeRefreshLayout, isRefreshing:
 @BindingAdapter(value = ["app:query"])
 internal fun setQuery(searchView: SearchView, query: String?) {
     searchView.setQuery(query, false)
+}
+
+@BindingAdapter(value = ["app:menu"])
+internal fun setMenu(toolbar: Toolbar, @MenuRes res: Int) {
+    toolbar.inflateMenu(res)
 }
