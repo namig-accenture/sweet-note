@@ -14,15 +14,22 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDialogFragment
 import app.extensions.Duration
 import app.extensions.showSnackBar
+import org.koin.android.ext.android.inject
 
 internal abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity(), LifecycleOwner {
     abstract val dataBinding: DB
     abstract fun addLifecycleObservers(lifecycle: Lifecycle)
+    private val logoutObserver by inject<LogoutObserver> { mapOf(EACH_ACTIVITY to this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         addLifecycleObservers(lifecycle)
+        lifecycle.addObserver(logoutObserver)
         super.onCreate(savedInstanceState)
         setContentView(dataBinding.root)
+    }
+
+    override fun onUserInteraction() {
+        logoutObserver.touchObserver.onNext(true)
     }
 
     inline fun <reified A : BaseActivity<DB>> A.provideDataBinding(@LayoutRes layoutRes: Int): DB {
@@ -53,5 +60,9 @@ internal abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity()
 
     fun showMessage(@StringRes messageId: Int? = null, message: String = "") {
         dataBinding.root.showSnackBar(messageId = messageId, message = message, duration = Duration.LONG)
+    }
+
+    companion object {
+        const val EACH_ACTIVITY = "EACH_ACTIVITY"
     }
 }
