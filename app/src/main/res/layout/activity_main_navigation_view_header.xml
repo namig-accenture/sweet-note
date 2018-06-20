@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="app.views.homeactivity.HomeViewModel" />
+
+        <variable
+            name="presenter"
+            type="app.views.homeactivity.HomePresenter" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:id="@+id/header_image"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:background="@drawable/header_background"
+            android:padding="2dp"
+            app:image="@{@drawable/cat}"
+            app:layout_constraintBottom_toTopOf="@+id/tv_username"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:fontFamily="serif-monospace"
+            android:text="@{viewModel.currentUser.email}"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_password"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/header_image"
+            tools:text="demo@demo.com" />
+
+        <app.customview.PasswordTogglableTextView
+            android:id="@+id/tv_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:drawableEnd="@drawable/ic_remove_red_eye_black_24dp"
+            android:drawablePadding="@dimen/spacing_medium"
+            android:fontFamily="serif-monospace"
+            android:inputType="textPassword"
+            android:text="@{viewModel.currentUser.password}"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_username"
+            tools:ignore="TextViewEdits"
+            tools:text="Abcde123@" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

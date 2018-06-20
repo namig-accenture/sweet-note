@@ -7,17 +7,31 @@ import android.arch.paging.PagedList
 import android.support.annotation.MenuRes
 import app.ext.BaseViewModel
 import com.example.namigtahmazli.sweetnote.R
+import domain.extensions.fromOptional
 import domain.model.NoteModel
+import domain.model.UserModel
+import domain.usecase.login.GetCurrentLoggedInUserUseCase
+import domain.usecase.login.LogUserOutUseCase
 import domain.usecase.note.FetchUserNotesUseCase
 import domain.usecase.note.GetNotesCountUseCase
+import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
 
 internal class HomeViewModel(private val fetchUserNotesUseCase: FetchUserNotesUseCase,
-                             private val getNotesCountUseCase: GetNotesCountUseCase) : BaseViewModel() {
+                             private val getNotesCountUseCase: GetNotesCountUseCase,
+                             private val getCurrentLoggedInUserUseCase: GetCurrentLoggedInUserUseCase,
+                             private val logUserOutUseCase: LogUserOutUseCase) : BaseViewModel() {
     @MenuRes
     val menuRes = R.menu.activity_home_menu
+
+    @MenuRes
+    val navigationMenu = R.menu.navigation_menu
+
+    val currentUser by lazy { MutableLiveData<UserModel>() }
     val refreshing by lazy { MutableLiveData<Boolean>().apply { value = false } }
     val listIsEmpty by lazy { MutableLiveData<Boolean>().apply { value = false } }
     val loadState: PublishSubject<NotesDataSource.LoadState> = PublishSubject.create<NotesDataSource.LoadState>()
@@ -34,6 +48,18 @@ internal class HomeViewModel(private val fetchUserNotesUseCase: FetchUserNotesUs
                 .setPageSize(PAGE_SIZE)
                 .build()
         LivePagedListBuilder(factory, pagedListConfig).build()
+    }
+
+    fun getCurrentUser(onError: (Throwable) -> Unit): Disposable {
+        return getCurrentLoggedInUserUseCase.get()
+                .doOnSuccess { currentUser.postValue(it.fromOptional) }
+                .subscribeBy(
+                        onError = { onError(it) }
+                )
+    }
+
+    fun logUserOut(): Completable {
+        return logUserOutUseCase.get()
     }
 
     companion object {

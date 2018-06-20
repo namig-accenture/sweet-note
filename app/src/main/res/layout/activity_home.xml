@@ -14,42 +14,61 @@
             type="app.views.homeactivity.HomePresenter" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
-        <android.support.design.widget.AppBarLayout
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="6dp">
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                style="@style/ToolBarStyle"
-                app:navigationIcon="@drawable/animated_menu_to_back_icon"
-                app:title="@string/register"
-                app:menu="@{viewModel.menuRes}"
-                app:onMenuItemClickListener="@{presenter.onMenuItemClickListener}"/>
-        </android.support.design.widget.AppBarLayout>
+            <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="6dp">
 
-        <include
-            android:id="@+id/home_content"
-            layout="@layout/content_home"
-            bind:viewModel="@{viewModel}" />
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    style="@style/ToolBarStyle"
+                    app:menu="@{viewModel.menuRes}"
+                    app:navigationIcon="@drawable/animated_menu_to_back_icon"
+                    app:navigationOnClickListener="@{presenter.menuButtonClickListener}"
+                    app:onMenuItemClickListener="@{presenter.onMenuItemClickListener}"
+                    app:title="@string/register" />
+            </android.support.design.widget.AppBarLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/btn_add_note"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_medium"
-            android:layout_marginEnd="@dimen/spacing_medium"
-            android:onClick="@{presenter::onAddButtonClicked}"
-            android:tint="@android:color/white"
-            android:transitionName="@string/home_activity_add_button_transition_name"
-            app:fabSize="normal"
-            app:layout_anchor="@id/home_content"
-            app:layout_anchorGravity="bottom|end"
-            app:srcCompat="@drawable/ic_add_black_24dp" />
+            <include
+                android:id="@+id/home_content"
+                layout="@layout/content_home"
+                bind:viewModel="@{viewModel}" />
 
-    </android.support.design.widget.CoordinatorLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/btn_add_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:layout_marginEnd="@dimen/spacing_medium"
+                android:onClick="@{presenter::onAddButtonClicked}"
+                android:tint="@android:color/white"
+                android:transitionName="@string/home_activity_add_button_transition_name"
+                app:fabSize="normal"
+                app:layout_anchor="@id/home_content"
+                app:layout_anchorGravity="bottom|end"
+                app:srcCompat="@drawable/ic_add_black_24dp" />
+
+        </android.support.design.widget.CoordinatorLayout>
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/navigation_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/activity_main_navigation_view_header"
+            app:menu="@{viewModel.navigationMenu}"
+            app:navigationItemSelectedListener="@{presenter.navigationItemSelectedListener}" />
+    </android.support.v4.widget.DrawerLayout>
 </layout>

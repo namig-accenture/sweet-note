@@ -6,10 +6,9 @@ import android.graphics.Rect
 import android.support.v7.widget.AppCompatTextView
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
 import app.extensions.contains
 
-internal class DrawableClickableTextView : AppCompatTextView, View.OnLayoutChangeListener {
+internal open class DrawableClickableTextView : AppCompatTextView {
     enum class DrawablePosition(val position: Int) {
         Top(1), Left(0), Right(2), Bottom(3);
     }
@@ -25,10 +24,6 @@ internal class DrawableClickableTextView : AppCompatTextView, View.OnLayoutChang
     constructor(context: Context) : super(context)
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
     constructor(context: Context, attributeSet: AttributeSet, defaultAttrStyle: Int) : super(context, attributeSet, defaultAttrStyle)
-
-    init {
-        addOnLayoutChangeListener(this)
-    }
 
     fun setOnDrawableTouchListener(action: (DrawablePosition) -> Unit) {
         onDrawableClick = action
@@ -78,10 +73,6 @@ internal class DrawableClickableTextView : AppCompatTextView, View.OnLayoutChang
                     bottom
             )
         }
-    }
-
-    override fun onLayoutChange(v: View?, left: Int, top: Int, right: Int, bottom: Int, oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
-        calculateApproximateCordinates()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {

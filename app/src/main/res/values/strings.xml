@@ -31,6 +31,7 @@
     <string name="home_activity_no_notes_found_message">You don\'t have any notes.</string>
     <string name="home_activity_menu_search_title">Search</string>
     <string name="home_activity_menu_search_hint">Search by title</string>
+    <string name="home_activity_menu_logout">Log out</string>
 
     <string name="add_edit_note_dialog_title_hint">Title</string>
     <string name="add_edit_note_dialog_username_hint">Username/Email</string>

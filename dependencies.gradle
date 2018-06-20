@@ -27,6 +27,7 @@ ext {
     def pagingVersion = '1.0.0'
     def pagingRxJavaVersion = '1.0.0-alpha1'
     def roomRxJavaVersion = '1.0.0-alpha1'
+    def glideVersion = '4.7.1'
 
     def allDependencies = [
             kotlinStdLib         : "org.jetbrains.kotlin:kotlin-stdlib-jre7:${kotlinVersion}",
@@ -58,7 +59,8 @@ ext {
             arrow                : "com.fernandocejas:arrow:${arrowVersion}",
             moshi                : "com.squareup.moshi:moshi:${moshiVersion}",
             paging               : "android.arch.paging:runtime:${pagingVersion}",
-            pagingRxJava         : "android.arch.paging:rxjava2:${pagingRxJavaVersion}"
+            pagingRxJava         : "android.arch.paging:rxjava2:${pagingRxJavaVersion}",
+            glide                : "com.github.bumptech.glide:glide:${glideVersion}"
     ]
 
     appDependencies = [
@@ -77,7 +79,8 @@ ext {
             allDependencies.timber,
             allDependencies.arrow,
             allDependencies.paging,
-            allDependencies.pagingRxJava
+            allDependencies.pagingRxJava,
+            allDependencies.glide
     ]
     appTestDependencies = [
             allDependencies.junit,

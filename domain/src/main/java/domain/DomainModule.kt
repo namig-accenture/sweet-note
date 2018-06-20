@@ -24,6 +24,7 @@ val useCase = applicationContext {
     factory { QueryNotesByTitleUseCase(get(), get()) }
     factory { EditNoteUseCase(get()) }
     factory { DeleteNoteUseCase(get()) }
+    factory { LogUserOutUseCase(get()) }
 }
 
 val domainModule = listOf(general, useCase)

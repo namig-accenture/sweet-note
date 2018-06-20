@@ -7,6 +7,7 @@ import data.extensions.fromJsonAsObject
 import data.extensions.toJson
 import domain.model.UserModel
 import domain.services.PreferenceService
+import io.reactivex.Completable
 
 class PreferenceWrapper(private val sharedPreferences: SharedPreferences,
                         private val moshi: Moshi) : PreferenceService {
@@ -15,6 +16,12 @@ class PreferenceWrapper(private val sharedPreferences: SharedPreferences,
                 .edit()
                 .putString(CURRENT_USER, user.toJson(moshi))
                 .apply()
+    }
+
+    override fun removeUser(): Completable {
+        return Completable.fromAction {
+            sharedPreferences.edit().remove(CURRENT_USER).apply()
+        }
     }
 
     override val currentUser: Optional<UserModel>

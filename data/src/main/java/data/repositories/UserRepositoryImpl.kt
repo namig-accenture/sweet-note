@@ -34,7 +34,7 @@ class UserRepositoryImpl(private val userDao: UserDao,
         return Single.fromCallable { userDao.findUserByEmailAndPassword(email, password)?.userModel.asOptional }
     }
 
-    override fun logUserOut(userModel: UserModel): Completable = Completable.complete()
+    override fun logUserOut(): Completable = preferenceService.removeUser()
 
     override fun findNotesForUser(userModel: UserModel, fetchNotesRequestModel: FetchNotesRequestModel): Observable<List<NoteModel>> {
         val notesObservable = fetchNotesRequestModel.run {

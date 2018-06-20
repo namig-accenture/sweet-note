@@ -8,6 +8,8 @@ val <T> T?.asOptional: Optional<T>
     else
         Optional.fromNullable(this)
 
+val <T> Optional<T>.fromOptional: T? get() = if (this.isPresent) get() else null
+
 inline fun <T, R> Optional<T>.fromOptional(block: (T) -> R?): R? {
     return if (this.isPresent) {
         block(get())

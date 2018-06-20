@@ -4,10 +4,16 @@ import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.content.res.TypedArray
 import android.databinding.ViewDataBinding
+import android.graphics.drawable.Drawable
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.namigtahmazli.sweetnote.R
 
 
@@ -47,4 +53,12 @@ inline fun TypedArray.use(block: TypedArray.() -> Unit) {
     } finally {
         recycle()
     }
+}
+
+fun ImageView.circleImage(drawable: Drawable) {
+    val options = RequestOptions().transforms(CircleCrop())
+    Glide.with(context)
+            .load(drawable)
+            .apply(options)
+            .into(this)
 }

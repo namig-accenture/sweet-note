@@ -7,14 +7,18 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.MainThread
+import android.support.v4.view.GravityCompat
 import app.ext.BaseActivity
+import app.ext.log
 import app.extensions.plusAssign
 import app.parcelables.ShowDialogArgumentModel
 import app.views.addeditnotedialog.AddEditNoteDialog
+import app.views.launchactivity.LaunchActivity
 import app.views.searchdialog.SearchDialog
 import app.views.shownote.ShowNoteDialog
 import com.example.namigtahmazli.sweetnote.R
 import com.example.namigtahmazli.sweetnote.databinding.ActivityHomeBinding
+import com.example.namigtahmazli.sweetnote.databinding.ActivityMainNavigationViewHeaderBinding
 import domain.model.NoteModel
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
@@ -24,6 +28,7 @@ internal class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     val homeViewModel by viewModel<HomeViewModel>()
     private val homePresenter by inject<HomePresenter> { mapOf(ACTIVITY to this) }
     private val notesPagedListAdapter by inject<NotesPagedListAdapter>()
+    private lateinit var navigationBinding: ActivityMainNavigationViewHeaderBinding
 
     override val dataBinding: ActivityHomeBinding
         get() = provideDataBinding(R.layout.activity_home).apply {
@@ -31,6 +36,12 @@ internal class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             this.viewModel = homeViewModel
             this.presenter = homePresenter
             this.setLifecycleOwner(this@HomeActivity)
+            navigationMenu.apply {
+                navigationBinding = ActivityMainNavigationViewHeaderBinding.bind(getHeaderView(0)).apply {
+                    viewModel = homeViewModel
+                    presenter = homePresenter
+                }
+            }
         }
 
     override fun addLifecycleObservers(lifecycle: Lifecycle) {
@@ -77,6 +88,11 @@ internal class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         }
     }
 
+    fun handleGettingCurrentLoggedInUser(throwable: Throwable) {
+        throwable.log<HomePresenter>("while getting current logged in user.")
+        showMessage(message = "Could not get current logged in user")
+    }
+
     fun updateNoteList(notes: PagedList<NoteModel>?) {
         notesPagedListAdapter.submitList(notes)
     }
@@ -84,6 +100,21 @@ internal class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     @MainThread
     fun openAddEditDialog() {
         addDialogFragment(block = { AddEditNoteDialog.instance })
+    }
+
+    @MainThread
+    fun openDrawer() {
+        dataBinding.drawerLayout.openDrawer(GravityCompat.START)
+    }
+
+    fun handleLoggingOut() {
+        startActivity(LaunchActivity.getIntent(this))
+        finish()
+    }
+
+    fun handleLoggingOutError(throwable: Throwable) {
+        throwable.log<HomePresenter>("while logging user out")
+        showMessage(message = "Could not log user out.")
     }
 
     companion object {
