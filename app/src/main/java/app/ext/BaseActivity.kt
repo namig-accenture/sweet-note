@@ -1,6 +1,7 @@
 package app.ext
 
 import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LifecycleOwner
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
@@ -14,16 +15,17 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDialogFragment
 import app.extensions.Duration
 import app.extensions.showSnackBar
+import domain.logoutnotifier.LogoutNotifier
 import org.koin.android.ext.android.inject
 
 internal abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity(), LifecycleOwner {
     abstract val dataBinding: DB
     abstract fun addLifecycleObservers(lifecycle: Lifecycle)
-    private val logoutObserver by inject<LogoutObserver> { mapOf(EACH_ACTIVITY to this) }
+    private val logoutObserver by inject<LogoutNotifier> { mapOf(EACH_ACTIVITY to this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         addLifecycleObservers(lifecycle)
-        lifecycle.addObserver(logoutObserver)
+        lifecycle.addObserver(logoutObserver as LifecycleObserver)
         super.onCreate(savedInstanceState)
         setContentView(dataBinding.root)
     }

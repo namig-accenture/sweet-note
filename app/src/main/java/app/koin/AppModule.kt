@@ -15,6 +15,7 @@ import app.views.shownote.showNoteModule
 import data.repositories.NoteRepositoryImpl
 import data.repositories.UserRepositoryImpl
 import domain.executor.PostExecutionThread
+import domain.logoutnotifier.LogoutNotifier
 import domain.repositories.NoteRepository
 import domain.repositories.UserRepository
 import org.koin.dsl.module.applicationContext
@@ -23,7 +24,7 @@ open class AppModule {
     private val general = applicationContext {
         bean { UIThread() as PostExecutionThread }
         bean { get<Context>().getSharedPreferences(getProperty("prefName"), Context.MODE_PRIVATE) }
-        factory { param -> LogoutObserver(param[BaseActivity.EACH_ACTIVITY]) }
+        factory { param -> LogoutObserver(param[BaseActivity.EACH_ACTIVITY]) as LogoutNotifier }
     }
     private val view = arrayOf(
             launchActivityModule,

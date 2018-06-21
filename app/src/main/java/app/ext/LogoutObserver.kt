@@ -4,6 +4,7 @@ import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
 import app.views.launchactivity.LaunchActivity
+import domain.logoutnotifier.LogoutNotifier
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -12,10 +13,10 @@ import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-internal class LogoutObserver(private val activity: BaseActivity<*>) : LifecycleObserver {
+internal class LogoutObserver(private val activity: BaseActivity<*>) : LifecycleObserver, LogoutNotifier {
     private val touchDisposables by lazy { CompositeDisposable() }
     private val sessionDisposable by lazy { CompositeDisposable() }
-    val touchObserver: PublishSubject<Boolean> = PublishSubject.create<Boolean>()
+    override val touchObserver: PublishSubject<Boolean> = PublishSubject.create<Boolean>()
     private var hasCurrentSession = false
     private var hasRegisteredTouchObserver = false
 
@@ -31,7 +32,7 @@ internal class LogoutObserver(private val activity: BaseActivity<*>) : Lifecycle
         unregisterTouchObserver()
     }
 
-    private fun startNewSession() {
+    override fun startNewSession() {
         if (!hasCurrentSession) {
             sessionDisposable += Observable.interval(SESSION_TIME, TIME_UNIT)
                     .subscribeBy(
@@ -42,17 +43,17 @@ internal class LogoutObserver(private val activity: BaseActivity<*>) : Lifecycle
         }
     }
 
-    private fun onSessionEnded() {
+    override fun onSessionEnded() {
         endCurrentSession()
         navigateToEnterPinScreen()
     }
 
-    private fun navigateToEnterPinScreen() {
+    override fun navigateToEnterPinScreen() {
         activity.startActivity(LaunchActivity.getIntent(activity))
         activity.finish()
     }
 
-    private fun registerTouchObserver() {
+    override fun registerTouchObserver() {
         if (!hasRegisteredTouchObserver) {
             touchDisposables += touchObserver
                     .debounce(TOUCH_SPEED, TOUCH_TIME_UNIT)
@@ -64,19 +65,19 @@ internal class LogoutObserver(private val activity: BaseActivity<*>) : Lifecycle
         }
     }
 
-    private fun resetSession() {
+    override fun resetSession() {
         endCurrentSession()
         startNewSession()
     }
 
-    private fun endCurrentSession() {
+    override fun endCurrentSession() {
         if (hasCurrentSession) {
             sessionDisposable.clear()
             hasCurrentSession = false
         }
     }
 
-    private fun unregisterTouchObserver() {
+    override fun unregisterTouchObserver() {
         if (hasRegisteredTouchObserver) {
             touchDisposables.clear()
             hasRegisteredTouchObserver = false
