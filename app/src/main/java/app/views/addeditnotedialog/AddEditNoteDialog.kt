@@ -6,7 +6,6 @@ import android.content.Context
 import android.os.Bundle
 import android.support.annotation.MainThread
 import android.support.v4.app.DialogFragment
-import android.view.View
 import app.ext.BaseDialogFragment
 import app.ext.log
 import app.extensions.plusAssign
@@ -36,7 +35,7 @@ internal class AddEditNoteDialog : BaseDialogFragment<DialogAddEditNoteBinding>(
     }
 
     override fun onBackPressed() {
-        this.dismiss()
+        addEditNoteDialogPresenter.observeIfHasChanges()
     }
 
     override fun onAttach(context: Context?) {
@@ -56,7 +55,7 @@ internal class AddEditNoteDialog : BaseDialogFragment<DialogAddEditNoteBinding>(
     }
 
     @MainThread
-    fun handleBackButtonClick(@Suppress("UNUSED_PARAMETER") view: View?) {
+    fun handleBackButtonClick() {
         dismiss()
     }
 

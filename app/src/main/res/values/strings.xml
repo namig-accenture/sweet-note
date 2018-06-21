@@ -46,6 +46,10 @@
     <string name="add_edit_note_dialog_username_not_defined_error">Username not defined.</string>
     <string name="add_edit_note_dialog_password_not_defined_error">Password not defined.</string>
     <string name="add_edit_note_dialog_home_button_content_description">Navigate up</string>
+    <string name="add_edit_not_dialog_discard_changes_warning_dialog_title">Discard Changes?</string>
+    <string name="add_edit_not_dialog_discard_changes_warning_dialog_message">Are you sure you want to discard changes and exit?</string>
+    <string name="add_edit_not_dialog_discard_changes_warning_dialog_positive_action">Discard</string>
+    <string name="add_edit_not_dialog_discard_changes_warning_dialog_negative_action">Cancel</string>
 
     <string name="search_dialog_search_error_message">Something went wrong while searching.</string>
     <string name="search_dialog_back_button_content_description">Clicking back button will take user to Home Activity</string>

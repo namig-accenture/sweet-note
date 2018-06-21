@@ -3,6 +3,7 @@ package app.views.addeditnotedialog
 import android.arch.lifecycle.MutableLiveData
 import app.ext.BaseViewModel
 import domain.exceptions.FieldNotDefinedException
+import domain.extensions.isValid
 import domain.model.NoteModel
 import domain.usecase.note.AddNoteUseCase
 import domain.usecase.note.EditNoteUseCase
@@ -115,8 +116,6 @@ internal class AddEditNoteViewModel(private val addNoteUseCase: AddNoteUseCase,
                 )
     }
 
-    private val String?.isValid get() = this != null && !isEmpty() && !isBlank()
-
     private fun updateSaveButtonState() {
         saveButtonEnabled.postValue(
                 title.value.isValid
@@ -125,5 +124,15 @@ internal class AddEditNoteViewModel(private val addNoteUseCase: AddNoteUseCase,
                         &&
                         password.value.isValid
         )
+    }
+
+    fun doesHaveChanges(): Single<Boolean> {
+        return Single.fromCallable {
+            note.value?.let {
+                it.userName != username.value || it.password != password.value || it.title != title.value
+            } ?: run {
+                username.value.isValid || password.value.isValid || title.value.isValid
+            }
+        }
     }
 }
