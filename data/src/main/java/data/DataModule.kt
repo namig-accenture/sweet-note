@@ -28,7 +28,7 @@ val general = applicationContext {
 }
 
 val database = applicationContext {
-    bean { AppDatabase.create(get(), name = getProperty("dbName")) }
+    bean { AppDatabase.create(get(), inMemory = getProperty("inMemory"), name = getProperty("dbName")) }
     bean { get<AppDatabase>().userDao() }
     bean { get<AppDatabase>().noteDao() }
 }

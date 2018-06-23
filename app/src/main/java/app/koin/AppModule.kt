@@ -2,6 +2,7 @@ package app.koin
 
 import android.content.Context
 import app.executor.UIThread
+import app.ext.ApplicationLifecycyleObserver
 import app.ext.BaseActivity
 import app.ext.LogoutObserver
 import app.views.addeditnotedialog.addEditDialogModule
@@ -14,6 +15,7 @@ import app.views.searchdialog.searchModule
 import app.views.shownote.showNoteModule
 import data.repositories.NoteRepositoryImpl
 import data.repositories.UserRepositoryImpl
+import domain.lifecycle.ApplicationLifecycyle
 import domain.executor.PostExecutionThread
 import domain.logoutnotifier.LogoutNotifier
 import domain.repositories.NoteRepository
@@ -24,7 +26,8 @@ open class AppModule {
     private val general = applicationContext {
         bean { UIThread() as PostExecutionThread }
         bean { get<Context>().getSharedPreferences(getProperty("prefName"), Context.MODE_PRIVATE) }
-        factory { param -> LogoutObserver(param[BaseActivity.EACH_ACTIVITY]) as LogoutNotifier }
+        bean { param -> LogoutObserver(param[BaseActivity.EACH_ACTIVITY]) as LogoutNotifier }
+        bean { ApplicationLifecycyleObserver() as ApplicationLifecycyle }
     }
     private val view = arrayOf(
             launchActivityModule,

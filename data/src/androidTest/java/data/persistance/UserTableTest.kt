@@ -21,8 +21,9 @@ class UserTableTest {
         const val password = "1234"
     }
 
-    @get:Rule
-    val expectedException = ExpectedException.none()
+    @JvmField
+    @Rule
+    val expectedException: ExpectedException = ExpectedException.none()
 
     private lateinit var userDao: UserDao
     private lateinit var database: AppDatabase

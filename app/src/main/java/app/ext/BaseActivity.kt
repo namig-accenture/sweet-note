@@ -1,7 +1,6 @@
 package app.ext
 
 import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LifecycleOwner
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
@@ -25,7 +24,6 @@ internal abstract class BaseActivity<DB : ViewDataBinding> : AppCompatActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         addLifecycleObservers(lifecycle)
-        lifecycle.addObserver(logoutObserver as LifecycleObserver)
         super.onCreate(savedInstanceState)
         setContentView(dataBinding.root)
     }

@@ -12,5 +12,6 @@ class TestApp : App() {
         setProperty("Debug", BuildConfig.DEBUG)
         setProperty("dbName", BuildConfig.DB_NAME)
         setProperty("prefName", "SweetPrefName")
+        setProperty("inMemory", true)
     }
 }

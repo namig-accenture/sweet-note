@@ -66,5 +66,13 @@ internal class LaunchActivity : BaseActivity<ActivityLauncherBinding>() {
         fun getIntent(context: Context): Intent {
             return Intent(context, LaunchActivity::class.java)
         }
+
+        fun startNewSession(context: Context): Intent {
+            return Intent(context, LaunchActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                        Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        }
     }
 }
