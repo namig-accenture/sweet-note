@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable
 import android.support.annotation.MenuRes
 import android.support.design.widget.NavigationView
 import android.support.design.widget.TextInputLayout
+import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
@@ -51,4 +53,13 @@ internal fun setImage(imageView: ImageView, drawable: Drawable) {
 @BindingAdapter(value = ["app:menu"])
 internal fun setMenu(navigationView: NavigationView, @MenuRes res: Int) {
     navigationView.inflateMenu(res)
+}
+
+@BindingAdapter(value = ["app:toggleDrawer"])
+internal fun toggleDrawer(drawerLayout: DrawerLayout, doOpen: Boolean) {
+    if (doOpen) {
+        drawerLayout.openDrawer(GravityCompat.START, true)
+    } else {
+        drawerLayout.closeDrawer(GravityCompat.START, true)
+    }
 }

@@ -31,6 +31,7 @@ internal class HomeViewModel(private val fetchUserNotesUseCase: FetchUserNotesUs
     @MenuRes
     val navigationMenu = R.menu.navigation_menu
 
+    val drawerToggler by lazy { MutableLiveData<Boolean>().apply { value = false } }
     val currentUser by lazy { MutableLiveData<UserModel>() }
     val refreshing by lazy { MutableLiveData<Boolean>().apply { value = false } }
     val listIsEmpty by lazy { MutableLiveData<Boolean>().apply { value = false } }

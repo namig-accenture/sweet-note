@@ -23,6 +23,8 @@
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 
+    <style name="AppTheme.AppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="ToolBarStyle" parent="Widget.AppCompat.Toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

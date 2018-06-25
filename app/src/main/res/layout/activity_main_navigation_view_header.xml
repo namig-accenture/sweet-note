@@ -4,12 +4,9 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="app.views.homeactivity.HomeViewModel" />
+            name="user"
+            type="domain.model.UserModel" />
 
-        <variable
-            name="presenter"
-            type="app.views.homeactivity.HomePresenter" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -37,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_medium"
             android:fontFamily="serif-monospace"
-            android:text="@{viewModel.currentUser.email}"
+            android:text="@{user.email}"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -56,7 +53,7 @@
             android:drawablePadding="@dimen/spacing_medium"
             android:fontFamily="serif-monospace"
             android:inputType="textPassword"
-            android:text="@{viewModel.currentUser.password}"
+            android:text="@{user.password}"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

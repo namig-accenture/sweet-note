@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -18,7 +19,9 @@
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        app:toggleDrawer="@{viewModel.drawerToggler}"
+        tools:openDrawer="start">
 
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
@@ -28,7 +31,8 @@
             <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="6dp">
+                android:elevation="6dp"
+                android:theme="@style/AppTheme.AppBarTheme">
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"

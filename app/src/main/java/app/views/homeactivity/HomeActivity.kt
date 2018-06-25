@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.MainThread
-import android.support.v4.view.GravityCompat
 import app.ext.BaseActivity
 import app.ext.log
 import app.extensions.plusAssign
@@ -20,6 +19,7 @@ import com.example.namigtahmazli.sweetnote.R
 import com.example.namigtahmazli.sweetnote.databinding.ActivityHomeBinding
 import com.example.namigtahmazli.sweetnote.databinding.ActivityMainNavigationViewHeaderBinding
 import domain.model.NoteModel
+import domain.model.UserModel
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -32,16 +32,13 @@ internal class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     override val dataBinding: ActivityHomeBinding
         get() = provideDataBinding(R.layout.activity_home).apply {
-            homeContent?.notesList?.let { it.adapter = notesPagedListAdapter }
+            homeContent.notesList?.let { it.adapter = notesPagedListAdapter }
             this.viewModel = homeViewModel
             this.presenter = homePresenter
-            this.setLifecycleOwner(this@HomeActivity)
             navigationMenu.apply {
-                navigationBinding = ActivityMainNavigationViewHeaderBinding.bind(getHeaderView(0)).apply {
-                    viewModel = homeViewModel
-                    presenter = homePresenter
-                }
+                navigationBinding = ActivityMainNavigationViewHeaderBinding.bind(getHeaderView(0))
             }
+            this.setLifecycleOwner(this@HomeActivity)
         }
 
     override fun addLifecycleObservers(lifecycle: Lifecycle) {
@@ -51,6 +48,7 @@ internal class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         notesPagedListAdapter.itemClickObserver.observe(this, Observer(::handleListItemClick))
+        homeViewModel.currentUser.observe(this, Observer(::handleCurrentUser))
     }
 
     fun openSearchDialog() {
@@ -67,6 +65,10 @@ internal class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                 }
             }
         })
+    }
+
+    private fun handleCurrentUser(user: UserModel?) {
+        navigationBinding.user = user
     }
 
     fun handleLoadState(loadState: NotesDataSource.LoadState?) {
@@ -100,11 +102,6 @@ internal class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     @MainThread
     fun openAddEditDialog() {
         addDialogFragment(block = { AddEditNoteDialog.instance })
-    }
-
-    @MainThread
-    fun openDrawer() {
-        dataBinding.drawerLayout.openDrawer(GravityCompat.START)
     }
 
     fun handleLoggingOut() {

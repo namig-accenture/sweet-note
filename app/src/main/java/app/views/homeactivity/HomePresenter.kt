@@ -32,7 +32,7 @@ internal class HomePresenter(private val homeActivity: HomeActivity) : BasePrese
     }
 
     val menuButtonClickListener: View.OnClickListener = View.OnClickListener {
-        homeActivity.openDrawer()
+        viewModel.drawerToggler.postValue(true)
     }
 
     val navigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener {
