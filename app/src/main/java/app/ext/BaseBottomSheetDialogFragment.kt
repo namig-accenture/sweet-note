@@ -6,8 +6,11 @@ import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.BottomSheetDialogFragment
+import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
+import android.view.accessibility.AccessibilityEvent
 import android.widget.FrameLayout
 
 internal abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment() {
@@ -56,7 +59,36 @@ internal abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragmen
         }
     }
 
-    override fun setupDialog(dialog: Dialog?, style: Int) {
+    private fun onUserInteraction() {
+        activity?.onUserInteraction()
+    }
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return object : BottomSheetDialog(context!!, theme) {
+            override fun dispatchGenericMotionEvent(ev: MotionEvent?): Boolean {
+                onUserInteraction()
+                return super.dispatchGenericMotionEvent(ev)
+            }
+
+            override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+                onUserInteraction()
+                return super.dispatchKeyEvent(event)
+            }
+
+            override fun dispatchKeyShortcutEvent(event: KeyEvent?): Boolean {
+                onUserInteraction()
+                return super.dispatchKeyShortcutEvent(event)
+            }
+
+            override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+                onUserInteraction()
+                return super.dispatchTouchEvent(ev)
+            }
+
+            override fun dispatchTrackballEvent(ev: MotionEvent?): Boolean {
+                onUserInteraction()
+                return super.dispatchTrackballEvent(ev)
+            }
+        }
     }
 }

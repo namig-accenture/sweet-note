@@ -114,9 +114,9 @@ abstract class LogoutNotifier : KoinComponent {
     }
 
     companion object {
-        const val SESSION_TIME = 30L
+        const val SESSION_TIME = 5L
         const val TOUCH_SPEED = 500L
-        val TIME_UNIT = TimeUnit.SECONDS
+        val TIME_UNIT = TimeUnit.MINUTES
         val TOUCH_TIME_UNIT = TimeUnit.MILLISECONDS
     }
 }
