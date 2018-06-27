@@ -4,6 +4,7 @@ import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
 import android.support.design.widget.NavigationView
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -33,6 +34,22 @@ internal class HomePresenter(private val homeActivity: HomeActivity) : BasePrese
 
     val menuButtonClickListener: View.OnClickListener = View.OnClickListener {
         viewModel.drawerToggler.postValue(true)
+    }
+
+    val drawerListener = object : DrawerLayout.DrawerListener {
+        override fun onDrawerStateChanged(newState: Int) {
+        }
+
+        override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+        }
+
+        override fun onDrawerClosed(drawerView: View) {
+            viewModel.drawerToggler.postValue(false)
+        }
+
+        override fun onDrawerOpened(drawerView: View) {
+            viewModel.drawerToggler.postValue(true)
+        }
     }
 
     val navigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener {
