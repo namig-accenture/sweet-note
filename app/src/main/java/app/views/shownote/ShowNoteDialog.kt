@@ -77,10 +77,14 @@ internal class ShowNoteDialog : BaseBottomSheetDialogFragment() {
 
     fun handleDeletingNote(removedNoteCount: Int) {
         if (removedNoteCount == 1) {
-            (activity as BaseActivity<*>).showMessage(message = "Removed Successfuly")
+            context?.let {
+                Toast.makeText(it, "Removed Successfully", Toast.LENGTH_LONG).show()
+            }
             dialog.dismiss()
         } else {
-            (activity as BaseActivity<*>).showMessage(message = "Could not delete. Please try again.")
+            context?.let {
+                Toast.makeText(it, "Could not delete note.", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
