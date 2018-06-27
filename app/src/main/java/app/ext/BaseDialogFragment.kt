@@ -9,9 +9,7 @@ import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.annotation.StringRes
 import android.support.v7.app.AppCompatDialogFragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import app.extensions.Duration
 import app.extensions.showSnackBar
 
@@ -37,10 +35,39 @@ internal abstract class BaseDialogFragment<DB : ViewDataBinding> : AppCompatDial
         return dataBinding.root
     }
 
+    private fun onUserInteraction() {
+        activity?.onUserInteraction()
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return object : Dialog(activity, theme) {
             override fun onBackPressed() {
                 this@BaseDialogFragment.onBackPressed()
+            }
+
+            override fun dispatchGenericMotionEvent(ev: MotionEvent?): Boolean {
+                onUserInteraction()
+                return super.dispatchGenericMotionEvent(ev)
+            }
+
+            override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+                onUserInteraction()
+                return super.dispatchKeyEvent(event)
+            }
+
+            override fun dispatchKeyShortcutEvent(event: KeyEvent?): Boolean {
+                onUserInteraction()
+                return super.dispatchKeyShortcutEvent(event)
+            }
+
+            override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+                onUserInteraction()
+                return super.dispatchTouchEvent(ev)
+            }
+
+            override fun dispatchTrackballEvent(ev: MotionEvent?): Boolean {
+                onUserInteraction()
+                return super.dispatchTrackballEvent(ev)
             }
         }
     }
