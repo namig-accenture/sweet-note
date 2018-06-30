@@ -1,0 +1,24 @@
+{
+  "notes": [
+    {
+      "title": "Facebook",
+      "username": "namig@facebook.com",
+      "password": "facebook"
+    },
+    {
+      "title": "Gmail",
+      "username": "namig@gmail.com",
+      "password": "gmail"
+    },
+    {
+      "title": "Instegram",
+      "username": "namig@instegram.com",
+      "password": "instegram"
+    },
+    {
+      "title": "Linkedin",
+      "username": "namig@linkedin.com",
+      "password": "linkedin"
+    }
+  ]
+}

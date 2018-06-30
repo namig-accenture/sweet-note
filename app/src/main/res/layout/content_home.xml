@@ -28,7 +28,9 @@
                 android:id="@+id/notes_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                tools:itemCount="3"
+                tools:listitem="@layout/note_list_item_view" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -41,7 +43,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>
